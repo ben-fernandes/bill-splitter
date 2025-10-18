@@ -56,6 +56,24 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
     setTempPeople(tempPeople.map(p => p.id === id ? { ...p, name } : p))
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent, personId: string) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      const currentIndex = tempPeople.findIndex(p => p.id === personId)
+      if (currentIndex === tempPeople.length - 1) {
+        // If this is the last row, add a new person
+        const newId = Date.now().toString()
+        setTempPeople([...tempPeople, { id: newId, name: '' }])
+        // Focus will happen automatically when the new input renders
+        setTimeout(() => {
+          const inputs = document.querySelectorAll('input[placeholder="Person name"]')
+          const lastInput = inputs[inputs.length - 1] as HTMLInputElement
+          lastInput?.focus()
+        }, 0)
+      }
+    }
+  }
+
   // Initialize temp data when modal opens
   if (isOpen && tempPeople.length === 0 && people.length > 0) {
     handleOpen()
@@ -79,6 +97,7 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
             <Input
               value={person.name}
               onChange={(value) => updatePersonName(person.id, value)}
+              onKeyDown={(e) => handleKeyDown(e, person.id)}
               placeholder="Person name"
               className="flex-1"
             />

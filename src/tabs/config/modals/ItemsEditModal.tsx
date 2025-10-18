@@ -67,6 +67,24 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
     setTempItems(tempItems.map(i => i.id === id ? { ...i, quantity } : i))
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent, itemId: string) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      const currentIndex = tempItems.findIndex(i => i.id === itemId)
+      if (currentIndex === tempItems.length - 1) {
+        // If this is the last row, add a new item
+        const newId = Date.now().toString()
+        setTempItems([...tempItems, { id: newId, name: '', price: 0, quantity: 1 }])
+        // Focus the name field of the new row
+        setTimeout(() => {
+          const inputs = document.querySelectorAll('input[placeholder="Item name"]')
+          const lastInput = inputs[inputs.length - 1] as HTMLInputElement
+          lastInput?.focus()
+        }, 0)
+      }
+    }
+  }
+
   // Initialize temp data when modal opens
   if (isOpen && tempItems.length === 0 && items.length > 0) {
     handleOpen()
@@ -111,6 +129,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                 type="number"
                 value={item.quantity || ''}
                 onChange={(value) => updateItemQuantity(item.id, parseInt(value) || 1)}
+                onKeyDown={(e) => handleKeyDown(e, item.id)}
                 placeholder="1"
                 min="1"
                 className="w-16"

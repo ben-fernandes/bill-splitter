@@ -2,6 +2,7 @@ interface InputProps {
   type?: 'text' | 'number'
   value: string | number
   onChange: (value: string) => void
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   placeholder?: string
   min?: string
   max?: string
@@ -13,7 +14,8 @@ interface InputProps {
 export function Input({ 
   type = 'text', 
   value, 
-  onChange, 
+  onChange,
+  onKeyDown,
   placeholder, 
   min, 
   max, 
@@ -33,6 +35,7 @@ export function Input({
       type={type}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onKeyDown={onKeyDown}
       placeholder={placeholder}
       min={min}
       max={max}
