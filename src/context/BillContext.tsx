@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
 
 export interface Person {
@@ -42,12 +42,79 @@ interface BillContextType {
 const BillContext = createContext<BillContextType | undefined>(undefined)
 
 export function BillProvider({ children }: { children: ReactNode }) {
-  const [people, setPeople] = useState<Person[]>([])
+  // Load initial state from localStorage
+  const [people, setPeople] = useState<Person[]>(() => {
+    try {
+      const saved = localStorage.getItem('bill-splitter-people')
+      return saved ? JSON.parse(saved) : []
+    } catch (error) {
+      console.error('Error loading people from localStorage:', error)
+      return []
+    }
+  })
   
-  const [items, setItems] = useState<MenuItem[]>([])
+  const [items, setItems] = useState<MenuItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('bill-splitter-items')
+      return saved ? JSON.parse(saved) : []
+    } catch (error) {
+      console.error('Error loading items from localStorage:', error)
+      return []
+    }
+  })
   
-  const [shares, setShares] = useState<Share[]>([])
-  const [serviceCharge, setServiceCharge] = useState<number>(0)
+  const [shares, setShares] = useState<Share[]>(() => {
+    try {
+      const saved = localStorage.getItem('bill-splitter-shares')
+      return saved ? JSON.parse(saved) : []
+    } catch (error) {
+      console.error('Error loading shares from localStorage:', error)
+      return []
+    }
+  })
+  
+  const [serviceCharge, setServiceCharge] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('bill-splitter-service-charge')
+      return saved ? parseFloat(saved) : 0
+    } catch (error) {
+      console.error('Error loading service charge from localStorage:', error)
+      return 0
+    }
+  })
+
+  // Save to localStorage whenever state changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('bill-splitter-people', JSON.stringify(people))
+    } catch (error) {
+      console.error('Error saving people to localStorage:', error)
+    }
+  }, [people])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bill-splitter-items', JSON.stringify(items))
+    } catch (error) {
+      console.error('Error saving items to localStorage:', error)
+    }
+  }, [items])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bill-splitter-shares', JSON.stringify(shares))
+    } catch (error) {
+      console.error('Error saving shares to localStorage:', error)
+    }
+  }, [shares])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bill-splitter-service-charge', serviceCharge.toString())
+    } catch (error) {
+      console.error('Error saving service charge to localStorage:', error)
+    }
+  }, [serviceCharge])
 
   const addPerson = () => {
     const newId = Date.now().toString()

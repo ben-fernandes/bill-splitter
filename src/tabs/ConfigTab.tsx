@@ -12,7 +12,8 @@ export function ConfigTab() {
     serviceCharge,
     setPeople,
     setItems,
-    setServiceCharge
+    setServiceCharge,
+    setShares
   } = useBill()
 
   const [editingPeople, setEditingPeople] = useState(false)
@@ -118,6 +119,7 @@ export function ConfigTab() {
   const handleResetAll = () => {
     setPeople([])
     setItems([])
+    setShares([])
     setServiceCharge(0)
     setShowResetConfirm(false)
   }
@@ -321,7 +323,7 @@ export function ConfigTab() {
         }
       >
         <p className="text-gray-700">
-          Are you sure you want to reset all configuration? This will clear all people, items, and settings.
+          Are you sure you want to reset all configuration? This will clear all people, items, bill splits, and settings.
         </p>
         <p className="text-red-600 font-semibold mt-4">
           This action cannot be undone.
