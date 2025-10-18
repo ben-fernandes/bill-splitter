@@ -46,6 +46,12 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
   const addPerson = () => {
     const newId = Date.now().toString()
     setTempPeople([...tempPeople, { id: newId, name: '' }])
+    // Focus the new input field
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('input[placeholder="Person name"]')
+      const lastInput = inputs[inputs.length - 1] as HTMLInputElement
+      lastInput?.focus()
+    }, 0)
   }
 
   const removePerson = (id: string) => {

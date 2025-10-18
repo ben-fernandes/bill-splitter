@@ -49,6 +49,12 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
   const addItem = () => {
     const newId = Date.now().toString()
     setTempItems([...tempItems, { id: newId, name: '', price: 0, quantity: 1 }])
+    // Focus the new item's name field
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('input[placeholder="Item name"]')
+      const lastInput = inputs[inputs.length - 1] as HTMLInputElement
+      lastInput?.focus()
+    }, 0)
   }
 
   const removeItem = (id: string) => {
