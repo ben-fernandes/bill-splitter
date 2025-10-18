@@ -10,6 +10,7 @@ export function ConfigTab() {
   const {
     people,
     items,
+    shares,
     serviceCharge,
     setPeople,
     setItems,
@@ -23,11 +24,27 @@ export function ConfigTab() {
 
   const handleSavePeople = (updatedPeople: typeof people) => {
     setPeople(updatedPeople)
+    
+    // Clean up shares for removed people
+    const updatedPeopleIds = new Set(updatedPeople.map(p => p.id))
+    const cleanedShares = shares.filter(share => updatedPeopleIds.has(share.personId))
+    if (cleanedShares.length !== shares.length) {
+      setShares(cleanedShares)
+    }
+    
     setEditingPeople(false)
   }
 
   const handleSaveItems = (updatedItems: typeof items) => {
     setItems(updatedItems)
+    
+    // Clean up shares for removed items
+    const updatedItemIds = new Set(updatedItems.map(i => i.id))
+    const cleanedShares = shares.filter(share => updatedItemIds.has(share.itemId))
+    if (cleanedShares.length !== shares.length) {
+      setShares(cleanedShares)
+    }
+    
     setEditingItems(false)
   }
 
