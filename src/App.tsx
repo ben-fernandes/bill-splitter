@@ -24,8 +24,8 @@ function App() {
   ])
   
   const [items, setItems] = useState<MenuItem[]>([
-    { id: '1', name: 'Item 1', price: 0 },
-    { id: '2', name: 'Item 2', price: 0 }
+    { id: '1', name: '', price: 0 },
+    { id: '2', name: '', price: 0 }
   ])
   
   const [shares, setShares] = useState<Share[]>([])
@@ -38,7 +38,7 @@ function App() {
 
   const addItem = () => {
     const newId = Date.now().toString()
-    setItems([...items, { id: newId, name: `Item ${items.length + 1}`, price: 0 }])
+    setItems([...items, { id: newId, name: '', price: 0 }])
   }
 
   const updatePersonName = (id: string, name: string) => {
