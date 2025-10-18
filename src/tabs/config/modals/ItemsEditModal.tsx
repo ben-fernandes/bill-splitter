@@ -118,7 +118,12 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
             </div>
             <button
               onClick={() => removeItem(item.id)}
-              className="text-sm text-red-600 hover:text-red-800 transition-colors cursor-pointer px-3"
+              disabled={tempItems.length === 1}
+              className={`text-sm px-3 transition-colors ${
+                tempItems.length === 1
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-red-600 hover:text-red-800 cursor-pointer'
+              }`}
             >
               Remove
             </button>

@@ -84,7 +84,12 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
             />
             <button
               onClick={() => removePerson(person.id)}
-              className="text-sm text-red-600 hover:text-red-800 transition-colors cursor-pointer px-3"
+              disabled={tempPeople.length === 1}
+              className={`text-sm px-3 transition-colors ${
+                tempPeople.length === 1
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-red-600 hover:text-red-800 cursor-pointer'
+              }`}
             >
               Remove
             </button>
