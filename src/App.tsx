@@ -44,6 +44,18 @@ function App() {
     setItems([...items, { id: newId, name: '', price: 0 }])
   }
 
+  const removePerson = (id: string) => {
+    setPeople(people.filter(p => p.id !== id))
+    // Also remove all shares for this person
+    setShares(shares.filter(s => s.personId !== id))
+  }
+
+  const removeItem = (id: string) => {
+    setItems(items.filter(i => i.id !== id))
+    // Also remove all shares for this item
+    setShares(shares.filter(s => s.itemId !== id))
+  }
+
   const updatePersonName = (id: string, name: string) => {
     setPeople(people.map(p => p.id === id ? { ...p, name } : p))
   }
@@ -99,11 +111,19 @@ function App() {
             </TableHeader>
             {people.map(person => (
               <TableHeader key={person.id}>
-                <Input
-                  value={person.name}
-                  onChange={(value) => updatePersonName(person.id, value)}
-                  variant="header"
-                />
+                <div className="flex flex-col gap-2">
+                  <Input
+                    value={person.name}
+                    onChange={(value) => updatePersonName(person.id, value)}
+                    variant="header"
+                  />
+                  <button
+                    onClick={() => removePerson(person.id)}
+                    className="text-xs text-white/70 hover:text-white transition-colors cursor-pointer"
+                  >
+                    Remove
+                  </button>
+                </div>
               </TableHeader>
             ))}
             <TableHeader>
@@ -148,7 +168,14 @@ function App() {
                   />
                 </TableCell>
               ))}
-              <TableCell />
+              <TableCell>
+                <button
+                  onClick={() => removeItem(item.id)}
+                  className="text-sm text-red-600 hover:text-red-800 transition-colors cursor-pointer"
+                >
+                  Remove
+                </button>
+              </TableCell>
             </TableRow>
           ))}
           <TableRow>
