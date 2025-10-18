@@ -119,9 +119,27 @@ export function ConfigTab() {
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-gray-300">
+                  <td colSpan={3} className="py-2 px-3 text-right text-gray-700 font-semibold">Subtotal:</td>
+                  <td className="py-2 px-3 text-right text-gray-800 font-semibold">
+                    £{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                  </td>
+                </tr>
+                {serviceCharge > 0 && (
+                  <tr>
+                    <td colSpan={3} className="py-2 px-3 text-right text-gray-600">Service Charge ({serviceCharge}%):</td>
+                    <td className="py-2 px-3 text-right text-gray-600">
+                      £{((items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * serviceCharge) / 100).toFixed(2)}
+                    </td>
+                  </tr>
+                )}
+                <tr className="border-t border-gray-300">
                   <td colSpan={3} className="py-2 px-3 text-right text-gray-700 font-bold">Grand Total:</td>
                   <td className="py-2 px-3 text-right text-purple-600 font-bold text-lg">
-                    £{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                    £{(() => {
+                      const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                      const serviceChargeAmount = (subtotal * serviceCharge) / 100
+                      return (subtotal + serviceChargeAmount).toFixed(2)
+                    })()}
                   </td>
                 </tr>
               </tfoot>

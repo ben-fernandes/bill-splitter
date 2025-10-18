@@ -189,7 +189,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
           </tbody>
           <tfoot>
             <tr className="border-t-2 border-gray-300">
-              <td colSpan={3} className="py-2 px-2 text-right text-gray-700 font-bold">Grand Total:</td>
+              <td colSpan={3} className="py-2 px-2 text-right text-gray-700 font-bold">Subtotal:</td>
               <td className="py-2 px-2 text-right text-purple-600 font-bold">
                 £{tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
               </td>
