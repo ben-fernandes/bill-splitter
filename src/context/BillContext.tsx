@@ -10,12 +10,13 @@ export interface MenuItem {
   id: string
   name: string
   price: number
+  quantity: number
 }
 
 export interface Share {
   personId: string
   itemId: string
-  percentage: number
+  portions: number
 }
 
 interface BillContextType {
@@ -34,7 +35,8 @@ interface BillContextType {
   updatePersonName: (id: string, name: string) => void
   updateItemName: (id: string, name: string) => void
   updateItemPrice: (id: string, price: number) => void
-  updateShare: (personId: string, itemId: string, percentage: number) => void
+  updateItemQuantity: (id: string, quantity: number) => void
+  updateShare: (personId: string, itemId: string, portions: number) => void
   getShare: (personId: string, itemId: string) => number
   calculateAmountOwed: (personId: string) => number
 }
@@ -123,7 +125,7 @@ export function BillProvider({ children }: { children: ReactNode }) {
 
   const addItem = () => {
     const newId = Date.now().toString()
-    setItems([...items, { id: newId, name: '', price: 0 }])
+    setItems([...items, { id: newId, name: '', price: 0, quantity: 1 }])
   }
 
   const removePerson = (id: string) => {
@@ -148,31 +150,45 @@ export function BillProvider({ children }: { children: ReactNode }) {
     setItems(items.map(i => i.id === id ? { ...i, price } : i))
   }
 
-  const updateShare = (personId: string, itemId: string, percentage: number) => {
+  const updateItemQuantity = (id: string, quantity: number) => {
+    setItems(items.map(i => i.id === id ? { ...i, quantity } : i))
+  }
+
+  const updateShare = (personId: string, itemId: string, portions: number) => {
     const existingShareIndex = shares.findIndex(
       s => s.personId === personId && s.itemId === itemId
     )
     
     if (existingShareIndex >= 0) {
       const newShares = [...shares]
-      newShares[existingShareIndex] = { personId, itemId, percentage }
+      newShares[existingShareIndex] = { personId, itemId, portions }
       setShares(newShares)
     } else {
-      setShares([...shares, { personId, itemId, percentage }])
+      setShares([...shares, { personId, itemId, portions }])
     }
   }
 
   const getShare = (personId: string, itemId: string): number => {
     const share = shares.find(s => s.personId === personId && s.itemId === itemId)
-    return share?.percentage || 0
+    return share?.portions || 0
   }
 
   const calculateAmountOwed = (personId: string): number => {
     let subtotal = 0
     
     items.forEach(item => {
-      const share = getShare(personId, item.id)
-      subtotal += (item.price * share) / 100
+      const personPortions = getShare(personId, item.id)
+      
+      // Calculate total portions for this item across all people
+      const totalPortions = people.reduce((sum, person) => {
+        return sum + getShare(person.id, item.id)
+      }, 0)
+      
+      // Calculate this person's share based on their portions
+      if (totalPortions > 0 && personPortions > 0) {
+        const itemTotal = item.price * item.quantity
+        subtotal += (itemTotal * personPortions) / totalPortions
+      }
     })
     
     const serviceChargeAmount = (subtotal * serviceCharge) / 100
@@ -197,6 +213,7 @@ export function BillProvider({ children }: { children: ReactNode }) {
         updatePersonName,
         updateItemName,
         updateItemPrice,
+        updateItemQuantity,
         updateShare,
         getShare,
         calculateAmountOwed

@@ -48,7 +48,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
 
   const addItem = () => {
     const newId = Date.now().toString()
-    setTempItems([...tempItems, { id: newId, name: '', price: 0 }])
+    setTempItems([...tempItems, { id: newId, name: '', price: 0, quantity: 1 }])
   }
 
   const removeItem = (id: string) => {
@@ -63,6 +63,10 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
     setTempItems(tempItems.map(i => i.id === id ? { ...i, price } : i))
   }
 
+  const updateItemQuantity = (id: string, quantity: number) => {
+    setTempItems(tempItems.map(i => i.id === id ? { ...i, quantity } : i))
+  }
+
   // Initialize temp data when modal opens
   if (isOpen && tempItems.length === 0 && items.length > 0) {
     handleOpen()
@@ -70,7 +74,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
 
   // Reset temp data when modal opens from empty state
   if (isOpen && items.length === 0 && tempItems.length === 0) {
-    setTempItems([{ id: Date.now().toString(), name: '', price: 0 }])
+    setTempItems([{ id: Date.now().toString(), name: '', price: 0, quantity: 1 }])
   }
 
   return (
@@ -99,6 +103,17 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                 min="0"
                 step="0.01"
                 className="w-24"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-gray-600 font-semibold">×</span>
+              <Input
+                type="number"
+                value={item.quantity || ''}
+                onChange={(value) => updateItemQuantity(item.id, parseInt(value) || 1)}
+                placeholder="1"
+                min="1"
+                className="w-16"
               />
             </div>
             <button

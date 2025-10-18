@@ -101,7 +101,7 @@ export function ConfigTab() {
             {items.map(item => (
               <div key={item.id} className="py-2 px-3 bg-gray-50 rounded flex justify-between">
                 <span className="text-gray-800">{item.name || 'Unnamed Item'}</span>
-                <span className="text-gray-600 font-semibold">£{item.price.toFixed(2)}</span>
+                <span className="text-gray-600 font-semibold">£{item.price.toFixed(2)} × {item.quantity}</span>
               </div>
             ))}
           </div>

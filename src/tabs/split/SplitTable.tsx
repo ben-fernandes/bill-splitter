@@ -24,22 +24,21 @@ export function SplitTable() {
           <TableRow key={item.id} hover>
             <TableCell>
               <div className="font-semibold">
-                {item.name || 'Unnamed Item'} - £{item.price.toFixed(2)}
+                {item.name || 'Unnamed Item'} - £{item.price.toFixed(2)} × {item.quantity}
               </div>
             </TableCell>
             {people.map(person => (
               <TableCell key={person.id} className="text-center">
-                <div className="flex items-center justify-center gap-1">
+                <div className="flex items-center justify-center">
                   <Input
                     type="number"
                     value={getShare(person.id, item.id) || ''}
                     onChange={(value) => updateShare(person.id, item.id, parseFloat(value) || 0)}
                     placeholder="0"
                     min="0"
-                    max="100"
-                    className="w-16 text-center"
+                    step="0.5"
+                    className="w-20 text-center"
                   />
-                  <span className="text-gray-600 font-semibold">%</span>
                 </div>
               </TableCell>
             ))}
