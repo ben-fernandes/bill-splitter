@@ -120,53 +120,83 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
       footer={<Button onClick={handleSave}>Save</Button>}
     >
       <div className="space-y-3">
-        {tempItems.map(item => (
-          <div key={item.id} className="flex gap-3 items-center">
-            <Input
-              value={item.name}
-              onChange={(value) => updateItemName(item.id, value)}
-              onKeyDown={(e) => handleKeyDown(e, item.id, 'name')}
-              placeholder="Item name"
-              className="flex-1"
-            />
-            <div className="flex items-center gap-1">
-              <span className="text-gray-600 font-semibold">£</span>
-              <Input
-                type="number"
-                value={item.price || ''}
-                onChange={(value) => updateItemPrice(item.id, parseFloat(value) || 0)}
-                onKeyDown={(e) => handleKeyDown(e, item.id, 'price')}
-                placeholder="0.00"
-                min="0"
-                step="0.01"
-                className="w-24"
-              />
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="text-gray-600 font-semibold">×</span>
-              <Input
-                type="number"
-                value={item.quantity || ''}
-                onChange={(value) => updateItemQuantity(item.id, parseInt(value) || 1)}
-                onKeyDown={(e) => handleKeyDown(e, item.id, 'quantity')}
-                placeholder="1"
-                min="1"
-                className="w-16"
-              />
-            </div>
-            <button
-              onClick={() => removeItem(item.id)}
-              disabled={tempItems.length === 1}
-              className={`text-sm px-3 transition-colors ${
-                tempItems.length === 1
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-red-600 hover:text-red-800 cursor-pointer'
-              }`}
-            >
-              Remove
-            </button>
-          </div>
-        ))}
+        <table className="w-full">
+          <thead>
+            <tr className="border-b-2 border-gray-300">
+              <th className="text-left py-2 px-2 text-gray-700 font-semibold text-sm">Item</th>
+              <th className="text-right py-2 px-2 text-gray-700 font-semibold text-sm">Price</th>
+              <th className="text-right py-2 px-2 text-gray-700 font-semibold text-sm">Qty</th>
+              <th className="text-right py-2 px-2 text-gray-700 font-semibold text-sm">Total</th>
+              <th className="py-2 px-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {tempItems.map(item => (
+              <tr key={item.id} className="border-b border-gray-200">
+                <td className="py-2 px-2">
+                  <Input
+                    value={item.name}
+                    onChange={(value) => updateItemName(item.id, value)}
+                    onKeyDown={(e) => handleKeyDown(e, item.id, 'name')}
+                    placeholder="Item name"
+                    className="w-full"
+                  />
+                </td>
+                <td className="py-2 px-2">
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-600 font-semibold">£</span>
+                    <Input
+                      type="number"
+                      value={item.price || ''}
+                      onChange={(value) => updateItemPrice(item.id, parseFloat(value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, item.id, 'price')}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      className="w-24"
+                    />
+                  </div>
+                </td>
+                <td className="py-2 px-2">
+                  <Input
+                    type="number"
+                    value={item.quantity || ''}
+                    onChange={(value) => updateItemQuantity(item.id, parseInt(value) || 1)}
+                    onKeyDown={(e) => handleKeyDown(e, item.id, 'quantity')}
+                    placeholder="1"
+                    min="1"
+                    className="w-16"
+                  />
+                </td>
+                <td className="py-2 px-2 text-right text-gray-800 font-semibold">
+                  £{(item.price * item.quantity).toFixed(2)}
+                </td>
+                <td className="py-2 px-2">
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    disabled={tempItems.length === 1}
+                    className={`text-sm px-3 transition-colors ${
+                      tempItems.length === 1
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-red-600 hover:text-red-800 cursor-pointer'
+                    }`}
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="border-t-2 border-gray-300">
+              <td colSpan={3} className="py-2 px-2 text-right text-gray-700 font-bold">Grand Total:</td>
+              <td className="py-2 px-2 text-right text-purple-600 font-bold">
+                £{tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+              </td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
         <Button onClick={addItem}>+ Add Item</Button>
         
         {errors.length > 0 && (
