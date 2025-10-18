@@ -126,8 +126,10 @@ export function ConfigTab() {
 
   return (
     <div className="space-y-8">
-      {/* People Section - Level 2 */}
-      <div className="p-6 bg-white rounded-lg shadow-lg">
+      {/* People and Items Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* People Section - Level 2 */}
+        <div className="p-6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">People</h2>
           {people.length > 0 && (
@@ -223,6 +225,7 @@ export function ConfigTab() {
             <Button onClick={startEditingItems}>Add Items</Button>
           </div>
         )}
+      </div>
       </div>
 
       {/* Items Edit Modal */}
