@@ -97,13 +97,35 @@ export function ConfigTab() {
 
         {/* View Mode */}
         {items.length > 0 ? (
-          <div className="space-y-2">
-            {items.map(item => (
-              <div key={item.id} className="py-2 px-3 bg-gray-50 rounded flex justify-between">
-                <span className="text-gray-800">{item.name || 'Unnamed Item'}</span>
-                <span className="text-gray-600 font-semibold">£{item.price.toFixed(2)} × {item.quantity}</span>
-              </div>
-            ))}
+          <div>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b-2 border-gray-300">
+                  <th className="text-left py-2 px-3 text-gray-700 font-semibold">Item</th>
+                  <th className="text-right py-2 px-3 text-gray-700 font-semibold">Price</th>
+                  <th className="text-right py-2 px-3 text-gray-700 font-semibold">Qty</th>
+                  <th className="text-right py-2 px-3 text-gray-700 font-semibold">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map(item => (
+                  <tr key={item.id} className="border-b border-gray-200">
+                    <td className="py-2 px-3 text-gray-800">{item.name || 'Unnamed Item'}</td>
+                    <td className="py-2 px-3 text-right text-gray-600">£{item.price.toFixed(2)}</td>
+                    <td className="py-2 px-3 text-right text-gray-600">{item.quantity}</td>
+                    <td className="py-2 px-3 text-right text-gray-800 font-semibold">£{(item.price * item.quantity).toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t-2 border-gray-300">
+                  <td colSpan={3} className="py-2 px-3 text-right text-gray-700 font-bold">Grand Total:</td>
+                  <td className="py-2 px-3 text-right text-purple-600 font-bold text-lg">
+                    £{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
         ) : (
           <div className="text-center py-8">
