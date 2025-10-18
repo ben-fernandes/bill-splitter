@@ -56,6 +56,28 @@ export function ConfigTab() {
     setShowResetConfirm(false)
   }
 
+  const handleExportData = () => {
+    const exportData = {
+      people,
+      items,
+      shares,
+      serviceCharge,
+      exportedAt: new Date().toISOString()
+    }
+    
+    const dataStr = JSON.stringify(exportData, null, 2)
+    const dataBlob = new Blob([dataStr], { type: 'application/json' })
+    const url = URL.createObjectURL(dataBlob)
+    
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `bill-splitter-export-${new Date().toISOString().split('T')[0]}.json`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="space-y-8">
       {/* People and Items Grid */}
@@ -183,7 +205,7 @@ export function ConfigTab() {
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Other Settings</h2>
         
         {/* Service Charge - Level 3 */}
-        <div>
+        <div className="mb-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-3">Service Charge</h3>
           <div className="flex items-center gap-2">
             <Input
@@ -197,6 +219,12 @@ export function ConfigTab() {
             />
             <span className="text-gray-600 font-semibold">%</span>
           </div>
+        </div>
+
+        {/* Export Data - Level 3 */}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">Export Data</h3>
+          <Button onClick={handleExportData}>Download JSON</Button>
         </div>
       </div>
 
