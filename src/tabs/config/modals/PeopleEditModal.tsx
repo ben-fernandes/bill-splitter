@@ -57,6 +57,14 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
   }
 
   const handleKeyDown = (e: React.KeyboardEvent, personId: string) => {
+    // Ctrl/Cmd+Enter to save
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault()
+      handleSave()
+      return
+    }
+    
+    // Regular Enter to add new row
     if (e.key === 'Enter') {
       e.preventDefault()
       const currentIndex = tempPeople.findIndex(p => p.id === personId)

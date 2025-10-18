@@ -68,6 +68,14 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
   }
 
   const handleKeyDown = (e: React.KeyboardEvent, itemId: string) => {
+    // Ctrl/Cmd+Enter to save
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault()
+      handleSave()
+      return
+    }
+    
+    // Regular Enter to add new row
     if (e.key === 'Enter') {
       e.preventDefault()
       const currentIndex = tempItems.findIndex(i => i.id === itemId)
@@ -108,6 +116,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
             <Input
               value={item.name}
               onChange={(value) => updateItemName(item.id, value)}
+              onKeyDown={(e) => handleKeyDown(e, item.id)}
               placeholder="Item name"
               className="flex-1"
             />
@@ -117,6 +126,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                 type="number"
                 value={item.price || ''}
                 onChange={(value) => updateItemPrice(item.id, parseFloat(value) || 0)}
+                onKeyDown={(e) => handleKeyDown(e, item.id)}
                 placeholder="0.00"
                 min="0"
                 step="0.01"
