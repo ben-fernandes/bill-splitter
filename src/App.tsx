@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { Button } from './components/Button'
+import { Input } from './components/Input'
+import { Table, TableHeader, TableCell, TableRow } from './components/Table'
 
 interface Person {
   id: string
@@ -88,97 +91,85 @@ function App() {
     <div className="max-w-7xl mx-auto p-8">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Bill Splitter</h1>
       
-      <div className="overflow-x-auto mb-8 rounded-lg shadow-lg">
-        <table className="w-full border-collapse bg-white">
-          <thead>
-            <tr>
-              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200 text-center font-semibold">
-                Item / Person
-              </th>
-              {people.map(person => (
-                <th key={person.id} className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200">
-                  <input
-                    type="text"
-                    value={person.name}
-                    onChange={(e) => updatePersonName(person.id, e.target.value)}
-                    className="w-full px-3 py-2 border-2 border-white/30 rounded bg-white/20 text-white font-semibold text-center placeholder-white/70 focus:outline-none focus:border-white/60 focus:bg-white/30"
-                  />
-                </th>
-              ))}
-              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200">
-                <button 
-                  onClick={addPerson} 
-                  className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md font-semibold transition-all hover:scale-105 hover:shadow-lg cursor-pointer"
-                >
-                  + Person
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map(item => (
-              <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                <td className="p-4 border border-gray-200">
-                  <div className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      value={item.name}
-                      onChange={(e) => updateItemName(item.id, e.target.value)}
-                      className="flex-1 px-3 py-2 border-2 border-gray-300 rounded focus:outline-none focus:border-purple-500"
-                      placeholder="Item name"
-                    />
-                    <input
-                      type="number"
-                      value={item.price || ''}
-                      onChange={(e) => updateItemPrice(item.id, parseFloat(e.target.value) || 0)}
-                      className="w-24 px-3 py-2 border-2 border-gray-300 rounded focus:outline-none focus:border-purple-500"
-                      placeholder="Price"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-                </td>
-                {people.map(person => (
-                  <td key={person.id} className="p-4 border border-gray-200 text-center">
-                    <input
-                      type="number"
-                      value={getShare(person.id, item.id) || ''}
-                      onChange={(e) => updateShare(person.id, item.id, parseFloat(e.target.value) || 0)}
-                      className="w-20 px-3 py-2 border-2 border-gray-300 rounded text-center focus:outline-none focus:border-purple-500"
-                      placeholder="0"
-                      min="0"
-                      max="100"
-                    />
-                  </td>
-                ))}
-                <td className="p-4 border border-gray-200"></td>
-              </tr>
+      <Table className="mb-8">
+        <thead>
+          <tr>
+            <TableHeader>
+              <div className="text-center">Item / Person</div>
+            </TableHeader>
+            {people.map(person => (
+              <TableHeader key={person.id}>
+                <Input
+                  value={person.name}
+                  onChange={(value) => updatePersonName(person.id, value)}
+                  variant="header"
+                />
+              </TableHeader>
             ))}
-            <tr>
-              <td colSpan={people.length + 2} className="p-4 border border-gray-200">
-                <button 
-                  onClick={addItem} 
-                  className="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg cursor-pointer"
-                >
-                  + Item
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            <TableHeader>
+              <Button onClick={addPerson} variant="secondary">
+                + Person
+              </Button>
+            </TableHeader>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map(item => (
+            <TableRow key={item.id} hover>
+              <TableCell>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={item.name}
+                    onChange={(value) => updateItemName(item.id, value)}
+                    placeholder="Item name"
+                    className="flex-1"
+                  />
+                  <Input
+                    type="number"
+                    value={item.price || ''}
+                    onChange={(value) => updateItemPrice(item.id, parseFloat(value) || 0)}
+                    placeholder="Price"
+                    min="0"
+                    step="0.01"
+                    className="w-24"
+                  />
+                </div>
+              </TableCell>
+              {people.map(person => (
+                <TableCell key={person.id} className="text-center">
+                  <Input
+                    type="number"
+                    value={getShare(person.id, item.id) || ''}
+                    onChange={(value) => updateShare(person.id, item.id, parseFloat(value) || 0)}
+                    placeholder="0"
+                    min="0"
+                    max="100"
+                    className="w-20 text-center"
+                  />
+                </TableCell>
+              ))}
+              <TableCell />
+            </TableRow>
+          ))}
+          <TableRow>
+            <TableCell colSpan={people.length + 2}>
+              <Button onClick={addItem}>+ Item</Button>
+            </TableCell>
+          </TableRow>
+        </tbody>
+      </Table>
 
       <div className="mb-8 p-6 bg-white rounded-lg shadow-lg">
         <label className="flex items-center gap-4 text-lg font-semibold text-gray-700">
           Service Charge (%):
-          <input
+          <Input
             type="number"
             value={serviceCharge || ''}
-            onChange={(e) => setServiceCharge(parseFloat(e.target.value) || 0)}
-            className="w-32 px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:border-purple-500 text-base"
+            onChange={(value) => setServiceCharge(parseFloat(value) || 0)}
             placeholder="0"
             min="0"
             max="100"
+            className="w-32"
           />
         </label>
       </div>
@@ -188,22 +179,22 @@ function App() {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200 text-left font-semibold">
-                Name
-              </th>
-              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200 text-left font-semibold">
-                Amount Owed
-              </th>
+              <TableHeader>
+                <div className="text-left">Name</div>
+              </TableHeader>
+              <TableHeader>
+                <div className="text-left">Amount Owed</div>
+              </TableHeader>
             </tr>
           </thead>
           <tbody>
             {people.map(person => (
-              <tr key={person.id} className="hover:bg-gray-50 transition-colors">
-                <td className="p-4 border border-gray-200">{person.name}</td>
-                <td className="p-4 border border-gray-200 font-bold text-purple-600 text-lg">
+              <TableRow key={person.id} hover>
+                <TableCell>{person.name}</TableCell>
+                <TableCell className="font-bold text-purple-600 text-lg">
                   £{calculateAmountOwed(person.id).toFixed(2)}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
           </tbody>
         </table>
