@@ -73,7 +73,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
     setTempItems(tempItems.map(i => i.id === id ? { ...i, quantity } : i))
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent, itemId: string) => {
+  const handleKeyDown = (e: React.KeyboardEvent, itemId: string, fieldType?: 'name' | 'price' | 'quantity') => {
     // Ctrl/Cmd+Enter to save
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault()
@@ -81,12 +81,15 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
       return
     }
     
-    // Regular Enter to add new row
+    // Regular Enter to add new row (only from price or quantity fields in last row)
     if (e.key === 'Enter') {
       e.preventDefault()
       const currentIndex = tempItems.findIndex(i => i.id === itemId)
-      if (currentIndex === tempItems.length - 1) {
-        // If this is the last row, add a new item
+      const isLastRow = currentIndex === tempItems.length - 1
+      const isLastField = fieldType === 'price' || fieldType === 'quantity'
+      
+      if (isLastRow && isLastField) {
+        // If this is the last row and in price/quantity field, add a new item
         const newId = Date.now().toString()
         setTempItems([...tempItems, { id: newId, name: '', price: 0, quantity: 1 }])
         // Focus the name field of the new row
@@ -122,7 +125,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
             <Input
               value={item.name}
               onChange={(value) => updateItemName(item.id, value)}
-              onKeyDown={(e) => handleKeyDown(e, item.id)}
+              onKeyDown={(e) => handleKeyDown(e, item.id, 'name')}
               placeholder="Item name"
               className="flex-1"
             />
@@ -132,7 +135,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                 type="number"
                 value={item.price || ''}
                 onChange={(value) => updateItemPrice(item.id, parseFloat(value) || 0)}
-                onKeyDown={(e) => handleKeyDown(e, item.id)}
+                onKeyDown={(e) => handleKeyDown(e, item.id, 'price')}
                 placeholder="0.00"
                 min="0"
                 step="0.01"
@@ -145,7 +148,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                 type="number"
                 value={item.quantity || ''}
                 onChange={(value) => updateItemQuantity(item.id, parseInt(value) || 1)}
-                onKeyDown={(e) => handleKeyDown(e, item.id)}
+                onKeyDown={(e) => handleKeyDown(e, item.id, 'quantity')}
                 placeholder="1"
                 min="1"
                 className="w-16"
