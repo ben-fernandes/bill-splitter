@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { BillProvider } from './context/BillContext'
 import { Tabs } from './components/Tabs'
-import { ConfigTab } from './tabs/ConfigTab'
-import { SplitTab } from './tabs/SplitTab'
-import { DuesTab } from './tabs/DuesTab'
+import { ConfigTab } from './tabs/config/ConfigTab'
+import { SplitTab } from './tabs/split/SplitTab'
+import { DuesTab } from './tabs/dues/DuesTab'
 
 function App() {
   const [activeTab, setActiveTab] = useState<string>('config')
