@@ -78,6 +78,37 @@ export function ConfigTab() {
     URL.revokeObjectURL(url)
   }
 
+  const handleImportData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string
+        const importedData = JSON.parse(content)
+        
+        // Validate the imported data has the expected structure
+        if (importedData.people && importedData.items && importedData.shares !== undefined && importedData.serviceCharge !== undefined) {
+          setPeople(importedData.people)
+          setItems(importedData.items)
+          setShares(importedData.shares)
+          setServiceCharge(importedData.serviceCharge)
+          alert('Data imported successfully!')
+        } else {
+          alert('Invalid file format. Please select a valid bill-splitter export file.')
+        }
+      } catch (error) {
+        console.error('Error importing data:', error)
+        alert('Error importing file. Please check the file format.')
+      }
+    }
+    reader.readAsText(file)
+    
+    // Reset the input so the same file can be imported again if needed
+    event.target.value = ''
+  }
+
   return (
     <div className="space-y-8">
       {/* People and Items Grid */}
@@ -221,10 +252,21 @@ export function ConfigTab() {
           </div>
         </div>
 
-        {/* Export Data - Level 3 */}
+        {/* Export/Import Data - Level 3 */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-3">Export Data</h3>
-          <Button onClick={handleExportData}>Download JSON</Button>
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">Backup & Restore</h3>
+          <div className="flex gap-3">
+            <Button onClick={handleExportData}>Export JSON</Button>
+            <label className="px-5 py-2 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700 transition-colors cursor-pointer">
+              Import JSON
+              <input
+                type="file"
+                accept=".json,application/json"
+                onChange={handleImportData}
+                className="hidden"
+              />
+            </label>
+          </div>
         </div>
       </div>
 
