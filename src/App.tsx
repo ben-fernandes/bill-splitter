@@ -108,7 +108,7 @@ function App() {
               <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200">
                 <button 
                   onClick={addPerson} 
-                  className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                  className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md font-semibold transition-all hover:scale-105 hover:shadow-lg cursor-pointer"
                 >
                   + Person
                 </button>
@@ -158,7 +158,7 @@ function App() {
               <td colSpan={people.length + 2} className="p-4 border border-gray-200">
                 <button 
                   onClick={addItem} 
-                  className="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                  className="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg cursor-pointer"
                 >
                   + Item
                 </button>
