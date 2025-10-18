@@ -139,7 +139,12 @@ export function ConfigTab() {
       </div>
 
       {/* People Edit Modal */}
-      <Modal isOpen={editingPeople} onClose={cancelEditingPeople} title="Edit People">
+      <Modal 
+        isOpen={editingPeople} 
+        onClose={cancelEditingPeople} 
+        title="Edit People"
+        footer={<Button onClick={savePeople}>Save</Button>}
+      >
         <div className="space-y-3">
           {tempPeople.map(person => (
             <div key={person.id} className="flex gap-3 items-center">
@@ -166,16 +171,6 @@ export function ConfigTab() {
               ))}
             </div>
           )}
-          
-          <div className="flex gap-3 pt-2">
-            <Button onClick={savePeople}>Save</Button>
-            <button
-              onClick={cancelEditingPeople}
-              className="px-5 py-2 text-gray-600 hover:text-gray-800 font-semibold transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
         </div>
       </Modal>
 
@@ -203,7 +198,12 @@ export function ConfigTab() {
       </div>
 
       {/* Items Edit Modal */}
-      <Modal isOpen={editingItems} onClose={cancelEditingItems} title="Edit Items">
+      <Modal 
+        isOpen={editingItems} 
+        onClose={cancelEditingItems} 
+        title="Edit Items"
+        footer={<Button onClick={saveItems}>Save</Button>}
+      >
         <div className="space-y-3">
           {tempItems.map(item => (
             <div key={item.id} className="flex gap-3 items-center">
@@ -242,16 +242,6 @@ export function ConfigTab() {
               ))}
             </div>
           )}
-          
-          <div className="flex gap-3 pt-2">
-            <Button onClick={saveItems}>Save</Button>
-            <button
-              onClick={cancelEditingItems}
-              className="px-5 py-2 text-gray-600 hover:text-gray-800 font-semibold transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
         </div>
       </Modal>
 
