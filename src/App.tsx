@@ -144,28 +144,34 @@ function App() {
                     placeholder="Item name"
                     className="flex-1"
                   />
-                  <Input
-                    type="number"
-                    value={item.price || ''}
-                    onChange={(value) => updateItemPrice(item.id, parseFloat(value) || 0)}
-                    placeholder="Price"
-                    min="0"
-                    step="0.01"
-                    className="w-24"
-                  />
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-600 font-semibold">£</span>
+                    <Input
+                      type="number"
+                      value={item.price || ''}
+                      onChange={(value) => updateItemPrice(item.id, parseFloat(value) || 0)}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      className="w-20"
+                    />
+                  </div>
                 </div>
               </TableCell>
               {people.map(person => (
                 <TableCell key={person.id} className="text-center">
-                  <Input
-                    type="number"
-                    value={getShare(person.id, item.id) || ''}
-                    onChange={(value) => updateShare(person.id, item.id, parseFloat(value) || 0)}
-                    placeholder="0"
-                    min="0"
-                    max="100"
-                    className="w-20 text-center"
-                  />
+                  <div className="flex items-center justify-center gap-1">
+                    <Input
+                      type="number"
+                      value={getShare(person.id, item.id) || ''}
+                      onChange={(value) => updateShare(person.id, item.id, parseFloat(value) || 0)}
+                      placeholder="0"
+                      min="0"
+                      max="100"
+                      className="w-16 text-center"
+                    />
+                    <span className="text-gray-600 font-semibold">%</span>
+                  </div>
                 </TableCell>
               ))}
               <TableCell>
