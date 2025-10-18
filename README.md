@@ -1,73 +1,55 @@
-# React + TypeScript + Vite
+# Bill Splitter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An experiment in using Windsurf and Claud Sonnet 4.5 to vibe-code a bill splitter app.
 
-Currently, two official plugins are available:
+## AI stats
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+As of this commit, since the start of this project.
 
-## React Compiler
+### General
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<table>
+  <tr>
+    <th>Time spent</th>
+    <td>An evening (see commit history for full details)</td>
+  </tr>
+</table>
 
-## Expanding the ESLint configuration
+### Code-gen
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+<table>
+  <tr>
+    <th>Tool</th>
+    <td>Windsurf 1.12.21 / Cascade</td>
+  </tr>
+  <tr>
+    <th>Model</th>
+    <td>Claude Sonnet 4.5</td>
+  </tr>
+  <tr>
+    <th>Multiplier</th>
+    <td>1</td>
+  </tr>
+  <tr>
+    <th>Credits spent</th>
+    <td>45</td>
+  </tr>
+</table>
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Git
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+<table>
+  <tr>
+    <th>Tool</th>
+    <td>GitKraken 11.5.1 / GitKraken AI</td>
+  </tr>
+  <tr>
+    <th>Model</th>
+    <td>Gemini 2.0 Flash</td>
+  </tr>
+  <tr>
+    <th>Tokens spent</th>
+    <td>116.3k</td>
+  </tr>
+</table>
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
