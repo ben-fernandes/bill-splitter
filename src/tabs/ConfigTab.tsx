@@ -19,7 +19,7 @@ export function ConfigTab() {
 
   return (
     <div className="space-y-8">
-      {/* People Section */}
+      {/* People Section - Level 2 */}
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">People</h2>
         <div className="space-y-3">
@@ -43,7 +43,7 @@ export function ConfigTab() {
         </div>
       </div>
 
-      {/* Items Section */}
+      {/* Items Section - Level 2 */}
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Items</h2>
         <div className="space-y-3">
@@ -79,11 +79,14 @@ export function ConfigTab() {
         </div>
       </div>
 
-      {/* Service Charge Section */}
+      {/* Other Settings Section - Level 2 */}
       <div className="p-6 bg-white rounded-lg shadow-lg">
-        <label className="flex items-center gap-4 text-lg font-semibold text-gray-700">
-          Service Charge:
-          <div className="flex items-center gap-1">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Other Settings</h2>
+        
+        {/* Service Charge - Level 3 */}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">Service Charge</h3>
+          <div className="flex items-center gap-2">
             <Input
               type="number"
               value={serviceCharge || ''}
@@ -95,7 +98,7 @@ export function ConfigTab() {
             />
             <span className="text-gray-600 font-semibold">%</span>
           </div>
-        </label>
+        </div>
       </div>
     </div>
   )

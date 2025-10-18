@@ -5,8 +5,8 @@ export function DuesTab() {
   const { people, calculateAmountOwed } = useBill()
 
   return (
-    <div className="p-8 bg-white rounded-lg shadow-lg">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Amount Owed</h2>
+    <div className="p-6 bg-white rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Amount Owed</h2>
       <table className="w-full border-collapse">
         <thead>
           <tr>
