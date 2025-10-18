@@ -120,22 +120,31 @@ export function ConfigTab() {
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">People</h2>
-          <button
-            onClick={startEditingPeople}
-            className="text-sm text-purple-600 hover:text-purple-800 font-semibold transition-colors cursor-pointer"
-          >
-            Edit
-          </button>
+          {people.length > 0 && (
+            <button
+              onClick={startEditingPeople}
+              className="text-sm text-purple-600 hover:text-purple-800 font-semibold transition-colors cursor-pointer"
+            >
+              Edit
+            </button>
+          )}
         </div>
 
         {/* View Mode */}
-        <div className="space-y-2">
-          {people.map(person => (
-            <div key={person.id} className="py-2 px-3 bg-gray-50 rounded">
-              <span className="text-gray-800">{person.name}</span>
-            </div>
-          ))}
-        </div>
+        {people.length > 0 ? (
+          <div className="space-y-2">
+            {people.map(person => (
+              <div key={person.id} className="py-2 px-3 bg-gray-50 rounded">
+                <span className="text-gray-800">{person.name}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500 mb-4">No people added yet</p>
+            <Button onClick={startEditingPeople}>Add People</Button>
+          </div>
+        )}
       </div>
 
       {/* People Edit Modal */}
@@ -178,23 +187,32 @@ export function ConfigTab() {
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">Items</h2>
-          <button
-            onClick={startEditingItems}
-            className="text-sm text-purple-600 hover:text-purple-800 font-semibold transition-colors cursor-pointer"
-          >
-            Edit
-          </button>
+          {items.length > 0 && (
+            <button
+              onClick={startEditingItems}
+              className="text-sm text-purple-600 hover:text-purple-800 font-semibold transition-colors cursor-pointer"
+            >
+              Edit
+            </button>
+          )}
         </div>
 
         {/* View Mode */}
-        <div className="space-y-2">
-          {items.map(item => (
-            <div key={item.id} className="py-2 px-3 bg-gray-50 rounded flex justify-between">
-              <span className="text-gray-800">{item.name || 'Unnamed Item'}</span>
-              <span className="text-gray-600 font-semibold">£{item.price.toFixed(2)}</span>
-            </div>
-          ))}
-        </div>
+        {items.length > 0 ? (
+          <div className="space-y-2">
+            {items.map(item => (
+              <div key={item.id} className="py-2 px-3 bg-gray-50 rounded flex justify-between">
+                <span className="text-gray-800">{item.name || 'Unnamed Item'}</span>
+                <span className="text-gray-600 font-semibold">£{item.price.toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500 mb-4">No items added yet</p>
+            <Button onClick={startEditingItems}>Add Items</Button>
+          </div>
+        )}
       </div>
 
       {/* Items Edit Modal */}

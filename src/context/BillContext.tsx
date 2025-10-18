@@ -42,15 +42,9 @@ interface BillContextType {
 const BillContext = createContext<BillContextType | undefined>(undefined)
 
 export function BillProvider({ children }: { children: ReactNode }) {
-  const [people, setPeople] = useState<Person[]>([
-    { id: '1', name: 'Person 1' },
-    { id: '2', name: 'Person 2' }
-  ])
+  const [people, setPeople] = useState<Person[]>([])
   
-  const [items, setItems] = useState<MenuItem[]>([
-    { id: '1', name: '', price: 0 },
-    { id: '2', name: '', price: 0 }
-  ])
+  const [items, setItems] = useState<MenuItem[]>([])
   
   const [shares, setShares] = useState<Share[]>([])
   const [serviceCharge, setServiceCharge] = useState<number>(0)
