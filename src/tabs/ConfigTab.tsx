@@ -20,6 +20,7 @@ export function ConfigTab() {
   const [tempPeople, setTempPeople] = useState<Person[]>([])
   const [tempItems, setTempItems] = useState<MenuItem[]>([])
   const [errors, setErrors] = useState<string[]>([])
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
 
   const startEditingPeople = () => {
     setTempPeople(JSON.parse(JSON.stringify(people)))
@@ -112,6 +113,13 @@ export function ConfigTab() {
 
   const updateTempItemPrice = (id: string, price: number) => {
     setTempItems(tempItems.map(i => i.id === id ? { ...i, price } : i))
+  }
+
+  const handleResetAll = () => {
+    setPeople([])
+    setItems([])
+    setServiceCharge(0)
+    setShowResetConfirm(false)
   }
 
   return (
@@ -284,6 +292,41 @@ export function ConfigTab() {
           </div>
         </div>
       </div>
+
+      {/* Reset All Button */}
+      <div className="flex justify-center pt-4">
+        <button
+          onClick={() => setShowResetConfirm(true)}
+          className="px-6 py-2 text-red-600 hover:text-red-800 font-semibold transition-colors cursor-pointer"
+        >
+          Reset All
+        </button>
+      </div>
+
+      {/* Reset Confirmation Modal */}
+      <Modal
+        isOpen={showResetConfirm}
+        onClose={() => setShowResetConfirm(false)}
+        title="Reset All Configuration"
+        footer={
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowResetConfirm(false)}
+              className="px-5 py-2 text-gray-600 hover:text-gray-800 font-semibold transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <Button onClick={handleResetAll}>Reset All</Button>
+          </div>
+        }
+      >
+        <p className="text-gray-700">
+          Are you sure you want to reset all configuration? This will clear all people, items, and settings.
+        </p>
+        <p className="text-red-600 font-semibold mt-4">
+          This action cannot be undone.
+        </p>
+      </Modal>
     </div>
   )
 }
