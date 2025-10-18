@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './App.css'
 
 interface Person {
   id: string
@@ -86,46 +85,53 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <h1>Bill Splitter</h1>
+    <div className="max-w-7xl mx-auto p-8">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Bill Splitter</h1>
       
-      <div className="table-container">
-        <table className="bill-table">
+      <div className="overflow-x-auto mb-8 rounded-lg shadow-lg">
+        <table className="w-full border-collapse bg-white">
           <thead>
             <tr>
-              <th>Item / Person</th>
+              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200 text-center font-semibold">
+                Item / Person
+              </th>
               {people.map(person => (
-                <th key={person.id}>
+                <th key={person.id} className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200">
                   <input
                     type="text"
                     value={person.name}
                     onChange={(e) => updatePersonName(person.id, e.target.value)}
-                    className="header-input"
+                    className="w-full px-3 py-2 border-2 border-white/30 rounded bg-white/20 text-white font-semibold text-center placeholder-white/70 focus:outline-none focus:border-white/60 focus:bg-white/30"
                   />
                 </th>
               ))}
-              <th>
-                <button onClick={addPerson} className="add-btn">+ Person</button>
+              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200">
+                <button 
+                  onClick={addPerson} 
+                  className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                >
+                  + Person
+                </button>
               </th>
             </tr>
           </thead>
           <tbody>
             {items.map(item => (
-              <tr key={item.id}>
-                <td>
-                  <div className="item-cell">
+              <tr key={item.id} className="hover:bg-gray-50 transition-colors">
+                <td className="p-4 border border-gray-200">
+                  <div className="flex gap-2 items-center">
                     <input
                       type="text"
                       value={item.name}
                       onChange={(e) => updateItemName(item.id, e.target.value)}
-                      className="item-name-input"
+                      className="flex-1 px-3 py-2 border-2 border-gray-300 rounded focus:outline-none focus:border-purple-500"
                       placeholder="Item name"
                     />
                     <input
                       type="number"
                       value={item.price || ''}
                       onChange={(e) => updateItemPrice(item.id, parseFloat(e.target.value) || 0)}
-                      className="item-price-input"
+                      className="w-24 px-3 py-2 border-2 border-gray-300 rounded focus:outline-none focus:border-purple-500"
                       placeholder="Price"
                       min="0"
                       step="0.01"
@@ -133,38 +139,43 @@ function App() {
                   </div>
                 </td>
                 {people.map(person => (
-                  <td key={person.id}>
+                  <td key={person.id} className="p-4 border border-gray-200 text-center">
                     <input
                       type="number"
                       value={getShare(person.id, item.id) || ''}
                       onChange={(e) => updateShare(person.id, item.id, parseFloat(e.target.value) || 0)}
-                      className="share-input"
+                      className="w-20 px-3 py-2 border-2 border-gray-300 rounded text-center focus:outline-none focus:border-purple-500"
                       placeholder="0"
                       min="0"
                       max="100"
                     />
                   </td>
                 ))}
-                <td></td>
+                <td className="p-4 border border-gray-200"></td>
               </tr>
             ))}
             <tr>
-              <td colSpan={people.length + 2}>
-                <button onClick={addItem} className="add-btn">+ Item</button>
+              <td colSpan={people.length + 2} className="p-4 border border-gray-200">
+                <button 
+                  onClick={addItem} 
+                  className="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                >
+                  + Item
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div className="service-charge">
-        <label>
+      <div className="mb-8 p-6 bg-white rounded-lg shadow-lg">
+        <label className="flex items-center gap-4 text-lg font-semibold text-gray-700">
           Service Charge (%):
           <input
             type="number"
             value={serviceCharge || ''}
             onChange={(e) => setServiceCharge(parseFloat(e.target.value) || 0)}
-            className="service-charge-input"
+            className="w-32 px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:border-purple-500 text-base"
             placeholder="0"
             min="0"
             max="100"
@@ -172,20 +183,26 @@ function App() {
         </label>
       </div>
 
-      <div className="summary-container">
-        <h2>Summary</h2>
-        <table className="summary-table">
+      <div className="mt-12 p-8 bg-white rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Summary</h2>
+        <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Amount Owed</th>
+              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200 text-left font-semibold">
+                Name
+              </th>
+              <th className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 border border-gray-200 text-left font-semibold">
+                Amount Owed
+              </th>
             </tr>
           </thead>
           <tbody>
             {people.map(person => (
-              <tr key={person.id}>
-                <td>{person.name}</td>
-                <td>£{calculateAmountOwed(person.id).toFixed(2)}</td>
+              <tr key={person.id} className="hover:bg-gray-50 transition-colors">
+                <td className="p-4 border border-gray-200">{person.name}</td>
+                <td className="p-4 border border-gray-200 font-bold text-purple-600 text-lg">
+                  £{calculateAmountOwed(person.id).toFixed(2)}
+                </td>
               </tr>
             ))}
           </tbody>
