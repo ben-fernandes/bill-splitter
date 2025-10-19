@@ -166,7 +166,7 @@ export function ItemsEditModal({ isOpen, items, serviceCharge, onSave, onClose }
                     placeholder="1"
                     min="1"
                     step="1"
-                    className="w-16"
+                    className="w-20"
                   />
                 </td>
                 <td className="py-2 px-3 text-right font-semibold numeric">
@@ -205,20 +205,17 @@ export function ItemsEditModal({ isOpen, items, serviceCharge, onSave, onClose }
               <td></td>
             </tr>
             <tr>
-              <td colSpan={3} className="py-2 px-3 text-right opacity-75">
-                <div className="flex items-center justify-end gap-2">
-                  <span>Service Charge:</span>
-                  <Input
-                    type="number"
-                    value={tempServiceCharge || ''}
-                    onChange={(value) => setTempServiceCharge(parseFloat(value) || 0)}
-                    placeholder="0"
-                    min="0"
-                    max="100"
-                    className="w-20"
-                  />
-                  <span>%</span>
-                </div>
+              <td colSpan={2} className="py-2 px-3 text-right opacity-75">Service Charge (%):</td>
+              <td className="py-2 px-3 opacity-75">
+                <Input
+                  type="number"
+                  value={tempServiceCharge || ''}
+                  onChange={(value) => setTempServiceCharge(parseFloat(value) || 0)}
+                  placeholder="0"
+                  min="0"
+                  max="100"
+                  className="w-20"
+                />
               </td>
               <td className="py-2 px-3 text-right opacity-75 numeric">
                 {tempServiceCharge > 0 ? `£${((tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) * tempServiceCharge) / 100).toFixed(2)}` : '£0.00'}
