@@ -11,11 +11,10 @@ export function Tabs({ activeTab, onTabChange, tabs }: TabsProps) {
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`px-6 py-3 font-semibold transition-all cursor-pointer ${
-            activeTab === tab.id
-              ? 'border-b-2 border-purple-600 text-purple-600'
-              : 'text-gray-600 hover:text-gray-800'
-          } ${index === tabs.length - 1 ? 'ml-auto' : ''}`}
+          className={`px-6 py-3 font-semibold transition-all cursor-pointer rounded-t text-gray-600 hover:text-gray-800 ${
+            index === tabs.length - 1 ? 'ml-auto' : ''
+          }`}
+          style={activeTab === tab.id ? { backgroundColor: 'rgba(209, 213, 219, 0.3)' } : undefined}
         >
           {tab.label}
         </button>
