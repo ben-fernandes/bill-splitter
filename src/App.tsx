@@ -5,6 +5,7 @@ import { Tabs } from './components/Tabs'
 import { ConfigTab } from './tabs/config/ConfigTab'
 import { SplitTab } from './tabs/split/SplitTab'
 import { DuesTab } from './tabs/dues/DuesTab'
+import { SettingsTab } from './tabs/settings/SettingsTab'
 
 function App() {
   const [activeTab, setActiveTab] = useState<string>('config')
@@ -12,7 +13,8 @@ function App() {
   const tabs = [
     { id: 'config', label: 'Config' },
     { id: 'split', label: 'Split' },
-    { id: 'dues', label: 'Dues' }
+    { id: 'dues', label: 'Dues' },
+    { id: 'settings', label: 'Settings' }
   ]
 
   return (
@@ -26,6 +28,7 @@ function App() {
           {activeTab === 'config' && <ConfigTab />}
           {activeTab === 'split' && <SplitTab />}
           {activeTab === 'dues' && <DuesTab />}
+          {activeTab === 'settings' && <SettingsTab />}
         </div>
       </BillProvider>
     </ThemeProvider>

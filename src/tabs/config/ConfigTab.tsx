@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useBill } from '../../context/BillContext'
-import { useTheme } from '../../context/ThemeContext'
 import { Button } from '../../components/Button'
 import { PeopleEditModal } from './modals/PeopleEditModal'
 import { ItemsEditModal } from './modals/ItemsEditModal'
@@ -17,8 +16,6 @@ export function ConfigTab() {
     setServiceCharge,
     setShares
   } = useBill()
-  
-  const { mode, setMode } = useTheme()
 
   const [editingPeople, setEditingPeople] = useState(false)
   const [editingItems, setEditingItems] = useState(false)
@@ -57,59 +54,6 @@ export function ConfigTab() {
     setShares([])
     setServiceCharge(0)
     setShowResetConfirm(false)
-  }
-
-  const handleExportData = () => {
-    const exportData = {
-      people,
-      items,
-      shares,
-      serviceCharge,
-      exportedAt: new Date().toISOString()
-    }
-    
-    const dataStr = JSON.stringify(exportData, null, 2)
-    const dataBlob = new Blob([dataStr], { type: 'application/json' })
-    const url = URL.createObjectURL(dataBlob)
-    
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `bill-splitter-export-${new Date().toISOString().split('T')[0]}.json`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-  }
-
-  const handleImportData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      try {
-        const content = e.target?.result as string
-        const importedData = JSON.parse(content)
-        
-        // Validate the imported data has the expected structure
-        if (importedData.people && importedData.items && importedData.shares !== undefined && importedData.serviceCharge !== undefined) {
-          setPeople(importedData.people)
-          setItems(importedData.items)
-          setShares(importedData.shares)
-          setServiceCharge(importedData.serviceCharge)
-          alert('Data imported successfully!')
-        } else {
-          alert('Invalid file format. Please select a valid bill-splitter export file.')
-        }
-      } catch (error) {
-        console.error('Error importing data:', error)
-        alert('Error importing file. Please check the file format.')
-      }
-    }
-    reader.readAsText(file)
-    
-    // Reset the input so the same file can be imported again if needed
-    event.target.value = ''
   }
 
   return (
@@ -234,65 +178,6 @@ export function ConfigTab() {
         onSave={handleSaveItems}
         onClose={() => setEditingItems(false)}
       />
-
-      {/* Other Settings Section - Level 2 */}
-      <div className="p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Other Settings</h2>
-        
-        {/* Theme - Level 3 */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">Theme</h3>
-          <div className="inline-flex rounded-lg border overflow-hidden">
-            <button
-              onClick={() => setMode('light')}
-              className={`px-4 py-2 font-semibold transition-colors ${
-                mode === 'light'
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
-                  : 'hover:bg-black/5'
-              }`}
-            >
-              Light
-            </button>
-            <button
-              onClick={() => setMode('dark')}
-              className={`px-4 py-2 font-semibold transition-colors border-l border-r ${
-                mode === 'dark'
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
-                  : 'hover:bg-black/5'
-              }`}
-            >
-              Dark
-            </button>
-            <button
-              onClick={() => setMode('auto')}
-              className={`px-4 py-2 font-semibold transition-colors ${
-                mode === 'auto'
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
-                  : 'hover:bg-black/5'
-              }`}
-            >
-              Auto
-            </button>
-          </div>
-        </div>
-
-        {/* Export/Import Data - Level 3 */}
-        <div>
-          <h3 className="text-lg font-semibold mb-3">Backup & Restore</h3>
-          <div className="flex gap-3">
-            <Button onClick={handleExportData}>Export JSON</Button>
-            <label className="px-5 py-2 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700 transition-colors cursor-pointer">
-              Import JSON
-              <input
-                type="file"
-                accept=".json,application/json"
-                onChange={handleImportData}
-                className="hidden"
-              />
-            </label>
-          </div>
-        </div>
-      </div>
 
       {/* Reset All Button */}
       <div className="flex justify-center pt-4">

@@ -7,7 +7,7 @@ interface TabsProps {
 export function Tabs({ activeTab, onTabChange, tabs }: TabsProps) {
   return (
     <div className="flex gap-2 mb-6 border-b border-gray-300">
-      {tabs.map(tab => (
+      {tabs.map((tab, index) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
@@ -15,7 +15,7 @@ export function Tabs({ activeTab, onTabChange, tabs }: TabsProps) {
             activeTab === tab.id
               ? 'border-b-2 border-purple-600 text-purple-600'
               : 'text-gray-600 hover:text-gray-800'
-          }`}
+          } ${index === tabs.length - 1 ? 'ml-auto' : ''}`}
         >
           {tab.label}
         </button>
