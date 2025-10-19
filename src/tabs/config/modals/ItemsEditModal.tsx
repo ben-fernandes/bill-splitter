@@ -165,6 +165,7 @@ export function ItemsEditModal({ isOpen, items, serviceCharge, onSave, onClose }
                     onKeyDown={(e) => handleKeyDown(e, item.id, 'quantity')}
                     placeholder="1"
                     min="1"
+                    step="1"
                     className="w-16"
                   />
                 </td>

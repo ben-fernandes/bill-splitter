@@ -41,10 +41,11 @@ export function SplitTable() {
                     <Input
                       type="number"
                       value={getShare(person.id, item.id) || ''}
-                      onChange={(value) => updateShare(person.id, item.id, parseFloat(value) || 0)}
+                      onChange={(value) => updateShare(person.id, item.id, parseInt(value) || 0)}
                       min="0"
-                      step="0.5"
-                      className="w-20 text-center"
+                      max={item.quantity.toString()}
+                      step="1"
+                      className="w-16 text-center"
                     />
                   </div>
                 </td>
