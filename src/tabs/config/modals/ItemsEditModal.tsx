@@ -7,12 +7,14 @@ import type { MenuItem } from '../../../context/BillContext'
 interface ItemsEditModalProps {
   isOpen: boolean
   items: MenuItem[]
-  onSave: (items: MenuItem[]) => void
+  serviceCharge: number
+  onSave: (items: MenuItem[], serviceCharge: number) => void
   onClose: () => void
 }
 
-export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModalProps) {
+export function ItemsEditModal({ isOpen, items, serviceCharge, onSave, onClose }: ItemsEditModalProps) {
   const [tempItems, setTempItems] = useState<MenuItem[]>([])
+  const [tempServiceCharge, setTempServiceCharge] = useState(0)
   const [errors, setErrors] = useState<string[]>([])
 
   // Reset temp data whenever modal opens
@@ -23,9 +25,10 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
       } else {
         setTempItems([{ id: Date.now().toString(), name: '', price: 0, quantity: 1 }])
       }
+      setTempServiceCharge(serviceCharge)
       setErrors([])
     }
-  }, [isOpen, items])
+  }, [isOpen, items, serviceCharge])
 
   const handleSave = () => {
     const validationErrors: string[] = []
@@ -44,7 +47,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
       return
     }
 
-    onSave(tempItems)
+    onSave(tempItems, tempServiceCharge)
     setErrors([])
   }
 
@@ -189,14 +192,47 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
           </tbody>
           <tfoot>
             <tr className="border-t-2">
-              <td colSpan={3} className="py-2 px-3 text-right font-bold">Subtotal:</td>
-              <td className="py-2 px-3 text-right font-bold">
+              <td colSpan={3} className="py-2 px-3 text-right font-semibold">Subtotal:</td>
+              <td className="py-2 px-3 text-right font-semibold">
                 £{tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colSpan={3} className="py-2 px-3 text-right opacity-75">
+                <div className="flex items-center justify-end gap-2">
+                  <span>Service Charge:</span>
+                  <Input
+                    type="number"
+                    value={tempServiceCharge || ''}
+                    onChange={(value) => setTempServiceCharge(parseFloat(value) || 0)}
+                    placeholder="0"
+                    min="0"
+                    max="100"
+                    className="w-20"
+                  />
+                  <span>%</span>
+                </div>
+              </td>
+              <td className="py-2 px-3 text-right opacity-75">
+                {tempServiceCharge > 0 ? `£${((tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) * tempServiceCharge) / 100).toFixed(2)}` : '£0.00'}
+              </td>
+              <td></td>
+            </tr>
+            <tr className="border-t">
+              <td colSpan={3} className="py-2 px-3 text-right font-bold">Grand Total:</td>
+              <td className="py-2 px-3 text-right font-bold text-lg">
+                £{(() => {
+                  const subtotal = tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                  const serviceChargeAmount = (subtotal * tempServiceCharge) / 100
+                  return (subtotal + serviceChargeAmount).toFixed(2)
+                })()}
               </td>
               <td></td>
             </tr>
           </tfoot>
         </table>
+        
         <Button onClick={addItem}>+ Add Item</Button>
         
         {errors.length > 0 && (

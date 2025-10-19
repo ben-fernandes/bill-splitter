@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useBill } from '../../context/BillContext'
 import { useTheme } from '../../context/ThemeContext'
 import { Button } from '../../components/Button'
-import { Input } from '../../components/Input'
 import { PeopleEditModal } from './modals/PeopleEditModal'
 import { ItemsEditModal } from './modals/ItemsEditModal'
 import { ConfigResetConfirmationModal } from './modals/ConfigResetConfirmationModal'
@@ -38,8 +37,9 @@ export function ConfigTab() {
     setEditingPeople(false)
   }
 
-  const handleSaveItems = (updatedItems: typeof items) => {
+  const handleSaveItems = (updatedItems: typeof items, updatedServiceCharge: number) => {
     setItems(updatedItems)
+    setServiceCharge(updatedServiceCharge)
     
     // Clean up shares for removed items
     const updatedItemIds = new Set(updatedItems.map(i => i.id))
@@ -230,6 +230,7 @@ export function ConfigTab() {
       <ItemsEditModal
         isOpen={editingItems}
         items={items}
+        serviceCharge={serviceCharge}
         onSave={handleSaveItems}
         onClose={() => setEditingItems(false)}
       />
@@ -272,23 +273,6 @@ export function ConfigTab() {
             >
               Auto
             </button>
-          </div>
-        </div>
-
-        {/* Service Charge - Level 3 */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">Service Charge</h3>
-          <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              value={serviceCharge || ''}
-              onChange={(value) => setServiceCharge(parseFloat(value) || 0)}
-              placeholder="0"
-              min="0"
-              max="100"
-              className="w-20"
-            />
-            <span className="font-semibold opacity-75">%</span>
           </div>
         </div>
 
