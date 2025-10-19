@@ -1,31 +1,28 @@
 import { useBill } from '../../context/BillContext'
-import { TableHeader, TableCell, TableRow } from '../../components/Table'
 
 export function DuesTable() {
   const { people, calculateAmountOwed } = useBill()
 
   return (
-    <table className="w-full border-collapse">
-      <thead>
-        <tr>
-          <TableHeader>
-            <div className="text-left">Name</div>
-          </TableHeader>
-          <TableHeader>
-            <div className="text-left">Amount Owed</div>
-          </TableHeader>
-        </tr>
-      </thead>
-      <tbody>
-        {people.map(person => (
-          <TableRow key={person.id} hover>
-            <TableCell>{person.name}</TableCell>
-            <TableCell className="font-bold text-purple-600 text-lg">
-              £{calculateAmountOwed(person.id).toFixed(2)}
-            </TableCell>
-          </TableRow>
-        ))}
-      </tbody>
-    </table>
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b-2 border-gray-300">
+            <th className="text-left py-2 px-3 text-gray-700 font-semibold">Name</th>
+            <th className="text-left py-2 px-3 text-gray-700 font-semibold">Amount Owed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {people.map(person => (
+            <tr key={person.id} className="border-b border-gray-200">
+              <td className="py-2 px-3 text-gray-800">{person.name}</td>
+              <td className="py-2 px-3 font-bold text-purple-600 text-lg">
+                £{calculateAmountOwed(person.id).toFixed(2)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }

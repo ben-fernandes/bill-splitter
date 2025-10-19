@@ -123,17 +123,17 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
         <table className="w-full">
           <thead>
             <tr className="border-b-2 border-gray-300">
-              <th className="text-left py-2 px-2 text-gray-700 font-semibold text-sm">Item</th>
-              <th className="text-right py-2 px-2 text-gray-700 font-semibold text-sm">Price</th>
-              <th className="text-right py-2 px-2 text-gray-700 font-semibold text-sm">Qty</th>
-              <th className="text-right py-2 px-2 text-gray-700 font-semibold text-sm">Total</th>
-              <th className="py-2 px-2"></th>
+              <th className="text-left py-2 px-3 text-gray-700 font-semibold text-sm">Item</th>
+              <th className="text-right py-2 px-3 text-gray-700 font-semibold text-sm">Price</th>
+              <th className="text-right py-2 px-3 text-gray-700 font-semibold text-sm">Qty</th>
+              <th className="text-right py-2 px-3 text-gray-700 font-semibold text-sm">Total</th>
+              <th className="py-2 px-3"></th>
             </tr>
           </thead>
           <tbody>
             {tempItems.map(item => (
               <tr key={item.id} className="border-b border-gray-200">
-                <td className="py-2 px-2">
+                <td className="py-2 px-3">
                   <Input
                     value={item.name}
                     onChange={(value) => updateItemName(item.id, value)}
@@ -142,7 +142,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                     className="w-full"
                   />
                 </td>
-                <td className="py-2 px-2">
+                <td className="py-2 px-3">
                   <div className="flex items-center gap-1">
                     <span className="text-gray-600 font-semibold">£</span>
                     <Input
@@ -157,7 +157,7 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                     />
                   </div>
                 </td>
-                <td className="py-2 px-2">
+                <td className="py-2 px-3">
                   <Input
                     type="number"
                     value={item.quantity || ''}
@@ -168,10 +168,10 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
                     className="w-16"
                   />
                 </td>
-                <td className="py-2 px-2 text-right text-gray-800 font-semibold">
+                <td className="py-2 px-3 text-right text-gray-800 font-semibold">
                   £{(item.price * item.quantity).toFixed(2)}
                 </td>
-                <td className="py-2 px-2">
+                <td className="py-2 px-3">
                   <button
                     onClick={() => removeItem(item.id)}
                     disabled={tempItems.length === 1}
@@ -189,8 +189,8 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
           </tbody>
           <tfoot>
             <tr className="border-t-2 border-gray-300">
-              <td colSpan={3} className="py-2 px-2 text-right text-gray-700 font-bold">Subtotal:</td>
-              <td className="py-2 px-2 text-right text-purple-600 font-bold">
+              <td colSpan={3} className="py-2 px-3 text-right text-gray-700 font-bold">Subtotal:</td>
+              <td className="py-2 px-3 text-right text-purple-600 font-bold">
                 £{tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
               </td>
               <td></td>
