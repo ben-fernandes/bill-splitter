@@ -26,13 +26,13 @@ export function SplitTable() {
               <td className="py-2 px-3 font-semibold">
                 {item.name || 'Unnamed Item'}
               </td>
-              <td className="py-2 px-3 text-right opacity-75">
+              <td className="py-2 px-3 text-right opacity-75 numeric">
                 £{item.price.toFixed(2)}
               </td>
-              <td className="py-2 px-3 text-right opacity-75">
+              <td className="py-2 px-3 text-right opacity-75 numeric">
                 {item.quantity}
               </td>
-              <td className="py-2 px-3 text-right font-semibold">
+              <td className="py-2 px-3 text-right font-semibold numeric">
                 £{(item.price * item.quantity).toFixed(2)}
               </td>
               {people.map(person => (
@@ -45,7 +45,7 @@ export function SplitTable() {
                       min="0"
                       max={item.quantity.toString()}
                       step="1"
-                      className="w-16 text-center"
+                      className="w-16"
                     />
                   </div>
                 </td>

@@ -16,7 +16,7 @@ export function DuesTable() {
           {people.map(person => (
             <tr key={person.id} className="border-b">
               <td className="py-2 px-3">{person.name}</td>
-              <td className="py-2 px-3 font-bold text-lg">
+              <td className="py-2 px-3 font-bold text-lg numeric">
                 £{calculateAmountOwed(person.id).toFixed(2)}
               </td>
             </tr>

@@ -184,30 +184,30 @@ export function ConfigTab() {
                 {items.map(item => (
                   <tr key={item.id} className="border-b">
                     <td className="py-2 px-3">{item.name || 'Unnamed Item'}</td>
-                    <td className="py-2 px-3 text-right opacity-75">£{item.price.toFixed(2)}</td>
-                    <td className="py-2 px-3 text-right opacity-75">{item.quantity}</td>
-                    <td className="py-2 px-3 text-right font-semibold">£{(item.price * item.quantity).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-right opacity-75 numeric">£{item.price.toFixed(2)}</td>
+                    <td className="py-2 px-3 text-right opacity-75 numeric">{item.quantity}</td>
+                    <td className="py-2 px-3 text-right font-semibold numeric">£{(item.price * item.quantity).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
                 <tr className="border-t-2">
                   <td colSpan={3} className="py-2 px-3 text-right font-semibold">Subtotal:</td>
-                  <td className="py-2 px-3 text-right font-semibold">
+                  <td className="py-2 px-3 text-right font-semibold numeric">
                     £{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
                   </td>
                 </tr>
                 {serviceCharge > 0 && (
                   <tr>
                     <td colSpan={3} className="py-2 px-3 text-right opacity-75">Service Charge ({serviceCharge}%):</td>
-                    <td className="py-2 px-3 text-right opacity-75">
+                    <td className="py-2 px-3 text-right opacity-75 numeric">
                       £{((items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * serviceCharge) / 100).toFixed(2)}
                     </td>
                   </tr>
                 )}
                 <tr className="border-t">
                   <td colSpan={3} className="py-2 px-3 text-right font-bold">Grand Total:</td>
-                  <td className="py-2 px-3 text-right font-bold text-lg">
+                  <td className="py-2 px-3 text-right font-bold text-lg numeric">
                     £{(() => {
                       const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
                       const serviceChargeAmount = (subtotal * serviceCharge) / 100
