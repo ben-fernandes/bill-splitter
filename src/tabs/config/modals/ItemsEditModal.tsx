@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal } from '../../../components/Modal'
 import { Button } from '../../../components/Button'
 import { Input } from '../../../components/Input'
@@ -15,10 +15,17 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
   const [tempItems, setTempItems] = useState<MenuItem[]>([])
   const [errors, setErrors] = useState<string[]>([])
 
-  const handleOpen = () => {
-    setTempItems(JSON.parse(JSON.stringify(items)))
-    setErrors([])
-  }
+  // Reset temp data whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      if (items.length > 0) {
+        setTempItems(JSON.parse(JSON.stringify(items)))
+      } else {
+        setTempItems([{ id: Date.now().toString(), name: '', price: 0, quantity: 1 }])
+      }
+      setErrors([])
+    }
+  }, [isOpen, items])
 
   const handleSave = () => {
     const validationErrors: string[] = []
@@ -100,16 +107,6 @@ export function ItemsEditModal({ isOpen, items, onSave, onClose }: ItemsEditModa
         }, 0)
       }
     }
-  }
-
-  // Initialize temp data when modal opens
-  if (isOpen && tempItems.length === 0 && items.length > 0) {
-    handleOpen()
-  }
-
-  // Reset temp data when modal opens from empty state
-  if (isOpen && items.length === 0 && tempItems.length === 0) {
-    setTempItems([{ id: Date.now().toString(), name: '', price: 0, quantity: 1 }])
   }
 
   return (

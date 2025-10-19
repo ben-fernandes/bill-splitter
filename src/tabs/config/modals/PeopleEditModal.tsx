@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal } from '../../../components/Modal'
 import { Button } from '../../../components/Button'
 import { Input } from '../../../components/Input'
@@ -15,10 +15,17 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
   const [tempPeople, setTempPeople] = useState<Person[]>([])
   const [errors, setErrors] = useState<string[]>([])
 
-  const handleOpen = () => {
-    setTempPeople(JSON.parse(JSON.stringify(people)))
-    setErrors([])
-  }
+  // Reset temp data whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      if (people.length > 0) {
+        setTempPeople(JSON.parse(JSON.stringify(people)))
+      } else {
+        setTempPeople([{ id: Date.now().toString(), name: '' }])
+      }
+      setErrors([])
+    }
+  }, [isOpen, people])
 
   const handleSave = () => {
     const validationErrors: string[] = []
@@ -86,16 +93,6 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
         }, 0)
       }
     }
-  }
-
-  // Initialize temp data when modal opens
-  if (isOpen && tempPeople.length === 0 && people.length > 0) {
-    handleOpen()
-  }
-
-  // Reset temp data when modal opens from empty state
-  if (isOpen && people.length === 0 && tempPeople.length === 0) {
-    setTempPeople([{ id: Date.now().toString(), name: '' }])
   }
 
   return (
