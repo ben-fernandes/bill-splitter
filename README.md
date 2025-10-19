@@ -32,7 +32,7 @@ As of this commit, since the start of this project.
   </tr>
   <tr>
     <th>Credits spent</th>
-    <td>45</td>
+    <td>78.5</td>
   </tr>
 </table>
 
@@ -49,7 +49,7 @@ As of this commit, since the start of this project.
   </tr>
   <tr>
     <th>Tokens spent</th>
-    <td>116.3k</td>
+    <td>175.4k</td>
   </tr>
 </table>
 
