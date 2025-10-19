@@ -192,6 +192,11 @@ export function ItemsEditModal({ isOpen, items, serviceCharge, onSave, onClose }
           </tbody>
           <tfoot>
             <tr className="border-t-2">
+              <td colSpan={5} className="py-3 px-3">
+                <Button onClick={addItem}>+ Add Item</Button>
+              </td>
+            </tr>
+            <tr>
               <td colSpan={3} className="py-2 px-3 text-right font-semibold">Subtotal:</td>
               <td className="py-2 px-3 text-right font-semibold">
                 £{tempItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
@@ -232,8 +237,6 @@ export function ItemsEditModal({ isOpen, items, serviceCharge, onSave, onClose }
             </tr>
           </tfoot>
         </table>
-        
-        <Button onClick={addItem}>+ Add Item</Button>
         
         {errors.length > 0 && (
           <div className="p-3 bg-red-50 border border-red-200 rounded">
