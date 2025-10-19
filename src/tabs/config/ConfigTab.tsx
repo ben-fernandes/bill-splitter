@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useBill } from '../../context/BillContext'
+import { useTheme } from '../../context/ThemeContext'
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input'
 import { PeopleEditModal } from './modals/PeopleEditModal'
@@ -17,6 +18,8 @@ export function ConfigTab() {
     setServiceCharge,
     setShares
   } = useBill()
+  
+  const { mode, setMode } = useTheme()
 
   const [editingPeople, setEditingPeople] = useState(false)
   const [editingItems, setEditingItems] = useState(false)
@@ -114,9 +117,9 @@ export function ConfigTab() {
       {/* People and Items Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* People Section - Level 2 */}
-        <div className="p-6 bg-white rounded-lg shadow-lg">
+        <div className="p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">People</h2>
+          <h2 className="text-2xl font-bold">People</h2>
           {people.length > 0 && (
             <button
               onClick={() => setEditingPeople(true)}
@@ -131,14 +134,14 @@ export function ConfigTab() {
         {people.length > 0 ? (
           <div className="space-y-2">
             {people.map(person => (
-              <div key={person.id} className="py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-800">{person.name}</span>
+              <div key={person.id} className="py-2 px-3 rounded border">
+                <span>{person.name}</span>
               </div>
             ))}
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-500 mb-4">No people added yet</p>
+            <p className="opacity-60 mb-4">No people added yet</p>
             <Button onClick={() => setEditingPeople(true)}>Add People</Button>
           </div>
         )}
@@ -152,9 +155,9 @@ export function ConfigTab() {
       />
 
       {/* Items Section - Level 2 */}
-      <div className="p-6 bg-white rounded-lg shadow-lg">
+      <div className="p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">Items</h2>
+          <h2 className="text-2xl font-bold">Items</h2>
           {items.length > 0 && (
             <button
               onClick={() => setEditingItems(true)}
@@ -170,41 +173,41 @@ export function ConfigTab() {
           <div>
             <table className="w-full">
               <thead>
-                <tr className="border-b-2 border-gray-300">
-                  <th className="text-left py-2 px-3 text-gray-700 font-semibold">Item</th>
-                  <th className="text-right py-2 px-3 text-gray-700 font-semibold">Price</th>
-                  <th className="text-right py-2 px-3 text-gray-700 font-semibold">Qty</th>
-                  <th className="text-right py-2 px-3 text-gray-700 font-semibold">Total</th>
+                <tr className="border-b-2">
+                  <th className="text-left py-2 px-3 font-semibold">Item</th>
+                  <th className="text-right py-2 px-3 font-semibold">Price</th>
+                  <th className="text-right py-2 px-3 font-semibold">Qty</th>
+                  <th className="text-right py-2 px-3 font-semibold">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {items.map(item => (
-                  <tr key={item.id} className="border-b border-gray-200">
-                    <td className="py-2 px-3 text-gray-800">{item.name || 'Unnamed Item'}</td>
-                    <td className="py-2 px-3 text-right text-gray-600">£{item.price.toFixed(2)}</td>
-                    <td className="py-2 px-3 text-right text-gray-600">{item.quantity}</td>
-                    <td className="py-2 px-3 text-right text-gray-800 font-semibold">£{(item.price * item.quantity).toFixed(2)}</td>
+                  <tr key={item.id} className="border-b">
+                    <td className="py-2 px-3">{item.name || 'Unnamed Item'}</td>
+                    <td className="py-2 px-3 text-right opacity-75">£{item.price.toFixed(2)}</td>
+                    <td className="py-2 px-3 text-right opacity-75">{item.quantity}</td>
+                    <td className="py-2 px-3 text-right font-semibold">£{(item.price * item.quantity).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-gray-300">
-                  <td colSpan={3} className="py-2 px-3 text-right text-gray-700 font-semibold">Subtotal:</td>
-                  <td className="py-2 px-3 text-right text-gray-800 font-semibold">
+                <tr className="border-t-2">
+                  <td colSpan={3} className="py-2 px-3 text-right font-semibold">Subtotal:</td>
+                  <td className="py-2 px-3 text-right font-semibold">
                     £{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
                   </td>
                 </tr>
                 {serviceCharge > 0 && (
                   <tr>
-                    <td colSpan={3} className="py-2 px-3 text-right text-gray-600">Service Charge ({serviceCharge}%):</td>
-                    <td className="py-2 px-3 text-right text-gray-600">
+                    <td colSpan={3} className="py-2 px-3 text-right opacity-75">Service Charge ({serviceCharge}%):</td>
+                    <td className="py-2 px-3 text-right opacity-75">
                       £{((items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * serviceCharge) / 100).toFixed(2)}
                     </td>
                   </tr>
                 )}
-                <tr className="border-t border-gray-300">
-                  <td colSpan={3} className="py-2 px-3 text-right text-gray-700 font-bold">Grand Total:</td>
-                  <td className="py-2 px-3 text-right text-purple-600 font-bold text-lg">
+                <tr className="border-t">
+                  <td colSpan={3} className="py-2 px-3 text-right font-bold">Grand Total:</td>
+                  <td className="py-2 px-3 text-right font-bold text-lg">
                     £{(() => {
                       const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
                       const serviceChargeAmount = (subtotal * serviceCharge) / 100
@@ -217,7 +220,7 @@ export function ConfigTab() {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-500 mb-4">No items added yet</p>
+            <p className="opacity-60 mb-4">No items added yet</p>
             <Button onClick={() => setEditingItems(true)}>Add Items</Button>
           </div>
         )}
@@ -232,12 +235,49 @@ export function ConfigTab() {
       />
 
       {/* Other Settings Section - Level 2 */}
-      <div className="p-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Other Settings</h2>
+      <div className="p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-4">Other Settings</h2>
         
+        {/* Theme - Level 3 */}
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-3">Theme</h3>
+          <div className="inline-flex rounded-lg border overflow-hidden">
+            <button
+              onClick={() => setMode('light')}
+              className={`px-4 py-2 font-semibold transition-colors ${
+                mode === 'light'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
+                  : 'hover:bg-black/5'
+              }`}
+            >
+              Light
+            </button>
+            <button
+              onClick={() => setMode('dark')}
+              className={`px-4 py-2 font-semibold transition-colors border-l border-r ${
+                mode === 'dark'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
+                  : 'hover:bg-black/5'
+              }`}
+            >
+              Dark
+            </button>
+            <button
+              onClick={() => setMode('auto')}
+              className={`px-4 py-2 font-semibold transition-colors ${
+                mode === 'auto'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
+                  : 'hover:bg-black/5'
+              }`}
+            >
+              Auto
+            </button>
+          </div>
+        </div>
+
         {/* Service Charge - Level 3 */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-3">Service Charge</h3>
+          <h3 className="text-lg font-semibold mb-3">Service Charge</h3>
           <div className="flex items-center gap-2">
             <Input
               type="number"
@@ -248,13 +288,13 @@ export function ConfigTab() {
               max="100"
               className="w-20"
             />
-            <span className="text-gray-600 font-semibold">%</span>
+            <span className="font-semibold opacity-75">%</span>
           </div>
         </div>
 
         {/* Export/Import Data - Level 3 */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-3">Backup & Restore</h3>
+          <h3 className="text-lg font-semibold mb-3">Backup & Restore</h3>
           <div className="flex gap-3">
             <Button onClick={handleExportData}>Export JSON</Button>
             <label className="px-5 py-2 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700 transition-colors cursor-pointer">
@@ -274,7 +314,10 @@ export function ConfigTab() {
       <div className="flex justify-center pt-4">
         <button
           onClick={() => setShowResetConfirm(true)}
-          className="px-6 py-2 text-red-600 hover:text-red-800 font-semibold transition-colors cursor-pointer"
+          className="px-6 py-2 font-semibold transition-colors cursor-pointer"
+          style={{ background: 'none', color: '#dc2626' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#991b1b')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#dc2626')}
         >
           Reset All
         </button>

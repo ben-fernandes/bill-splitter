@@ -1,6 +1,41 @@
 @import "tailwindcss";
 
+@theme {
+  --color-*: initial;
+  
+  /* Backgrounds */
+  --color-background: light-dark(#ffffff, #1f2937);
+  --color-surface: light-dark(#ffffff, #374151);
+  
+  /* Text colors */
+  --color-foreground: light-dark(#1f2937, #f3f4f6);
+  
+  /* Border colors - softer grays */
+  --color-border: light-dark(#e5e7eb, #4b5563);
+  
+  /* Purple and Indigo colors */
+  --color-purple-600: #9333ea;
+  --color-purple-700: #7e22ce;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  
+  /* White color - always white in both modes */
+  --color-white: #ffffff;
+}
+
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background-color: light-dark(#f3f4f6, #111827);
+  color: light-dark(#1f2937, #f3f4f6);
+}
+
+/* Global defaults for cards/surfaces */
+.shadow-lg,
+[class*="shadow"] {
+  background-color: light-dark(#ffffff, #374151);
+}
+
+/* Softer borders globally */
+* {
+  border-color: light-dark(#e5e7eb, #4b5563);
 }

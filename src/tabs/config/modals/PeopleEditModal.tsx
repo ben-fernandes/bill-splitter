@@ -118,8 +118,11 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
               className={`text-sm px-3 transition-colors ${
                 tempPeople.length === 1
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-red-600 hover:text-red-800 cursor-pointer'
+                  : 'cursor-pointer'
               }`}
+              style={tempPeople.length > 1 ? { background: 'none', color: '#dc2626' } : undefined}
+              onMouseEnter={(e) => tempPeople.length > 1 && (e.currentTarget.style.color = '#991b1b')}
+              onMouseLeave={(e) => tempPeople.length > 1 && (e.currentTarget.style.color = '#dc2626')}
             >
               Remove
             </button>
