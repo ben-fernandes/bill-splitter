@@ -1,55 +1,35 @@
 import { useTheme } from '../../context/ThemeContext'
 import { Button } from '../../components/Button'
 import { useBill } from '../../context/BillContext'
+import { useState } from 'react'
 
 export function SettingsTab() {
   const { mode, setMode } = useTheme()
-  const { people, items, shares, serviceCharge, setPeople, setItems, setShares, setServiceCharge } = useBill()
+  const { people, items, shares, serviceCharge } = useBill()
+  const [copied, setCopied] = useState(false)
 
-  const handleExportData = () => {
+  const handleCopyShareableURL = () => {
     const data = {
       people,
       items,
       shares,
-      serviceCharge,
-      exportedAt: new Date().toISOString()
+      serviceCharge
     }
     
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `bill-splitter-${new Date().toISOString().split('T')[0]}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
-
-  const handleImportData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target?.result as string)
-        
-        if (data.people) setPeople(data.people)
-        if (data.items) setItems(data.items)
-        if (data.shares) setShares(data.shares)
-        if (data.serviceCharge !== undefined) setServiceCharge(data.serviceCharge)
-        
-        alert('Data imported successfully!')
-      } catch (error) {
-        alert('Error importing data. Please check the file format.')
-        console.error('Import error:', error)
-      }
+    try {
+      const json = JSON.stringify(data)
+      const base64 = btoa(json)
+      
+      const url = new URL(window.location.href)
+      url.searchParams.set('data', base64)
+      
+      navigator.clipboard.writeText(url.toString())
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      alert('Error creating shareable URL')
+      console.error('Share error:', error)
     }
-    reader.readAsText(file)
-    
-    // Reset the input so the same file can be imported again if needed
-    event.target.value = ''
   }
 
   return (
@@ -93,21 +73,17 @@ export function SettingsTab() {
         </div>
       </div>
 
-      {/* Export/Import Data - Level 3 */}
+      {/* Share Data - Level 3 */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">Backup & Restore</h3>
+        <h3 className="text-lg font-semibold mb-3">Share</h3>
         <div className="flex gap-3">
-          <Button onClick={handleExportData}>Export JSON</Button>
-          <label className="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md font-semibold hover:from-purple-700 hover:to-indigo-700 hover:shadow-lg transition-all cursor-pointer">
-            Import JSON
-            <input
-              type="file"
-              accept=".json,application/json"
-              onChange={handleImportData}
-              className="hidden"
-            />
-          </label>
+          <Button onClick={handleCopyShareableURL}>
+            {copied ? '✓ Copied!' : 'Copy Shareable URL'}
+          </Button>
         </div>
+        <p className="text-sm opacity-70 mt-2">
+          Share your bill by copying the URL. Anyone with the link can view and edit the bill.
+        </p>
       </div>
     </div>
   )

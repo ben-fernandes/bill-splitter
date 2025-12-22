@@ -44,46 +44,71 @@ interface BillContextType {
 const BillContext = createContext<BillContextType | undefined>(undefined)
 
 export function BillProvider({ children }: { children: ReactNode }) {
-  // Load initial state from localStorage
-  const [people, setPeople] = useState<Person[]>(() => {
+  // Helper to load initial data from URL or localStorage
+  const loadInitialData = () => {
     try {
-      const saved = localStorage.getItem('bill-splitter-people')
-      return saved ? JSON.parse(saved) : []
+      // Check for URL query parameter first
+      const params = new URLSearchParams(window.location.search)
+      const dataParam = params.get('data')
+      
+      if (dataParam) {
+        // Decode base64 and parse JSON
+        const decoded = atob(dataParam)
+        const data = JSON.parse(decoded)
+        
+        // Save to localStorage
+        if (data.people) localStorage.setItem('bill-splitter-people', JSON.stringify(data.people))
+        if (data.items) localStorage.setItem('bill-splitter-items', JSON.stringify(data.items))
+        if (data.shares) localStorage.setItem('bill-splitter-shares', JSON.stringify(data.shares))
+        if (data.serviceCharge !== undefined) localStorage.setItem('bill-splitter-service-charge', JSON.stringify(data.serviceCharge))
+        
+        return data
+      }
     } catch (error) {
-      console.error('Error loading people from localStorage:', error)
-      return []
+      console.error('Error loading data from URL:', error)
     }
-  })
+    
+    // Fall back to localStorage
+    try {
+      return {
+        people: JSON.parse(localStorage.getItem('bill-splitter-people') || '[]'),
+        items: JSON.parse(localStorage.getItem('bill-splitter-items') || '[]'),
+        shares: JSON.parse(localStorage.getItem('bill-splitter-shares') || '[]'),
+        serviceCharge: JSON.parse(localStorage.getItem('bill-splitter-service-charge') || '0')
+      }
+    } catch (error) {
+      console.error('Error loading data from localStorage:', error)
+      return { people: [], items: [], shares: [], serviceCharge: 0 }
+    }
+  }
+
+  const initialData = loadInitialData()
   
-  const [items, setItems] = useState<MenuItem[]>(() => {
+  const [people, setPeople] = useState<Person[]>(initialData.people)
+  const [items, setItems] = useState<MenuItem[]>(initialData.items)
+  const [shares, setShares] = useState<Share[]>(initialData.shares)
+  const [serviceCharge, setServiceCharge] = useState<number>(initialData.serviceCharge)
+
+  // Helper to update URL with current data
+  const updateURL = (currentPeople: Person[], currentItems: MenuItem[], currentShares: Share[], currentServiceCharge: number) => {
     try {
-      const saved = localStorage.getItem('bill-splitter-items')
-      return saved ? JSON.parse(saved) : []
+      const data = {
+        people: currentPeople,
+        items: currentItems,
+        shares: currentShares,
+        serviceCharge: currentServiceCharge
+      }
+      
+      const json = JSON.stringify(data)
+      const base64 = btoa(json)
+      
+      const url = new URL(window.location.href)
+      url.searchParams.set('data', base64)
+      window.history.replaceState({}, '', url.toString())
     } catch (error) {
-      console.error('Error loading items from localStorage:', error)
-      return []
+      console.error('Error updating URL:', error)
     }
-  })
-  
-  const [shares, setShares] = useState<Share[]>(() => {
-    try {
-      const saved = localStorage.getItem('bill-splitter-shares')
-      return saved ? JSON.parse(saved) : []
-    } catch (error) {
-      console.error('Error loading shares from localStorage:', error)
-      return []
-    }
-  })
-  
-  const [serviceCharge, setServiceCharge] = useState<number>(() => {
-    try {
-      const saved = localStorage.getItem('bill-splitter-service-charge')
-      return saved ? parseFloat(saved) : 0
-    } catch (error) {
-      console.error('Error loading service charge from localStorage:', error)
-      return 0
-    }
-  })
+  }
 
   // Save to localStorage whenever state changes
   useEffect(() => {
@@ -112,11 +137,16 @@ export function BillProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('bill-splitter-service-charge', serviceCharge.toString())
+      localStorage.setItem('bill-splitter-service-charge', JSON.stringify(serviceCharge))
     } catch (error) {
       console.error('Error saving service charge to localStorage:', error)
     }
   }, [serviceCharge])
+
+  // Update URL whenever any state changes
+  useEffect(() => {
+    updateURL(people, items, shares, serviceCharge)
+  }, [people, items, shares, serviceCharge])
 
   const addPerson = () => {
     const newId = Date.now().toString()
