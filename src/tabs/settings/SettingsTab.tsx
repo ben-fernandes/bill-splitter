@@ -1,34 +1,20 @@
 import { useTheme } from '../../context/ThemeContext'
 import { Button } from '../../components/Button'
-import { useBill } from '../../context/BillContext'
 import { useState } from 'react'
 
 export function SettingsTab() {
   const { mode, setMode } = useTheme()
-  const { people, items, shares, serviceCharge } = useBill()
   const [copied, setCopied] = useState(false)
 
   const handleCopyShareableURL = () => {
-    const data = {
-      people,
-      items,
-      shares,
-      serviceCharge
-    }
-    
     try {
-      const json = JSON.stringify(data)
-      const base64 = btoa(json)
-      
-      const url = new URL(window.location.href)
-      url.searchParams.set('data', base64)
-      
-      navigator.clipboard.writeText(url.toString())
+      // Simply copy the current URL which already has the data query param
+      navigator.clipboard.writeText(window.location.href)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
-      alert('Error creating shareable URL')
-      console.error('Share error:', error)
+      alert('Error copying URL')
+      console.error('Copy error:', error)
     }
   }
 

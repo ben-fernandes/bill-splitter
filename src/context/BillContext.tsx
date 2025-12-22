@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
+import { serializeData, deserializeData } from '../lib/serde'
 
 export interface Person {
   id: string
@@ -52,9 +53,8 @@ export function BillProvider({ children }: { children: ReactNode }) {
       const dataParam = params.get('data')
       
       if (dataParam) {
-        // Decode base64 and parse JSON
-        const decoded = atob(dataParam)
-        const data = JSON.parse(decoded)
+        // Deserialize and parse JSON
+        const data = deserializeData(dataParam)
         
         // Save to localStorage
         if (data.people) localStorage.setItem('bill-splitter-people', JSON.stringify(data.people))
@@ -99,11 +99,10 @@ export function BillProvider({ children }: { children: ReactNode }) {
         serviceCharge: currentServiceCharge
       }
       
-      const json = JSON.stringify(data)
-      const base64 = btoa(json)
+      const serialized = serializeData(data)
       
       const url = new URL(window.location.href)
-      url.searchParams.set('data', base64)
+      url.searchParams.set('data', serialized)
       window.history.replaceState({}, '', url.toString())
     } catch (error) {
       console.error('Error updating URL:', error)
