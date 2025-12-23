@@ -39,7 +39,7 @@ interface BillContextType {
   updateItemQuantity: (id: string, quantity: number) => void
   updateShare: (personId: string, itemId: string, portions: number) => void
   getShare: (personId: string, itemId: string) => number
-  calculateAmountOwed: (personId: string) => number
+  calculateAmountsOwedWithRounding: () => Map<string, number>
 }
 
 const BillContext = createContext<BillContextType | undefined>(undefined)
@@ -224,6 +224,32 @@ export function BillProvider({ children }: { children: ReactNode }) {
     return subtotal + serviceChargeAmount
   }
 
+  const calculateAmountsOwedWithRounding = (): Map<string, number> => {
+    const amounts = new Map<string, number>()
+    
+    // Calculate grand total
+    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    const serviceChargeAmount = (subtotal * serviceCharge) / 100
+    const grandTotal = subtotal + serviceChargeAmount
+    
+    // Calculate each person's amount and round
+    let roundedSum = 0
+    people.forEach((person, index) => {
+      if (index < people.length - 1) {
+        // Round normally for all but the last person
+        const amount = Math.round(calculateAmountOwed(person.id) * 100) / 100
+        amounts.set(person.id, amount)
+        roundedSum += amount
+      } else {
+        // Last person gets the remainder to ensure total matches exactly
+        const amount = Math.round(grandTotal * 100) / 100 - roundedSum
+        amounts.set(person.id, amount)
+      }
+    })
+    
+    return amounts
+  }
+
   return (
     <BillContext.Provider
       value={{
@@ -245,7 +271,7 @@ export function BillProvider({ children }: { children: ReactNode }) {
         updateItemQuantity,
         updateShare,
         getShare,
-        calculateAmountOwed
+        calculateAmountsOwedWithRounding
       }}
     >
       {children}
