@@ -21,7 +21,7 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
       if (people.length > 0) {
         setTempPeople(JSON.parse(JSON.stringify(people)))
       } else {
-        setTempPeople([{ id: Date.now().toString(), name: '' }])
+        setTempPeople([{ id: Date.now().toString(), name: '', amountPaid: 0 }])
       }
       setErrors([])
     }
@@ -52,7 +52,7 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
 
   const addPerson = () => {
     const newId = Date.now().toString()
-    setTempPeople([...tempPeople, { id: newId, name: '' }])
+    setTempPeople([...tempPeople, { id: newId, name: '', amountPaid: 0 }])
     // Focus the new input field
     setTimeout(() => {
       const inputs = document.querySelectorAll('input[placeholder="Person name"]')
@@ -69,7 +69,11 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
     setTempPeople(tempPeople.map(p => p.id === id ? { ...p, name } : p))
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent, personId: string) => {
+  const updatePersonAmountPaid = (id: string, amountPaid: number) => {
+    setTempPeople(tempPeople.map(p => p.id === id ? { ...p, amountPaid } : p))
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent, personId: string, fieldType?: 'name' | 'amountPaid') => {
     // Ctrl/Cmd+Enter to save
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault()
@@ -77,15 +81,17 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
       return
     }
     
-    // Regular Enter to add new row
+    // Regular Enter to add new row (from name or amountPaid field in last row)
     if (e.key === 'Enter') {
       e.preventDefault()
       const currentIndex = tempPeople.findIndex(p => p.id === personId)
-      if (currentIndex === tempPeople.length - 1) {
+      const isLastRow = currentIndex === tempPeople.length - 1
+      
+      if (isLastRow && (fieldType === 'name' || fieldType === 'amountPaid')) {
         // If this is the last row, add a new person
         const newId = Date.now().toString()
-        setTempPeople([...tempPeople, { id: newId, name: '' }])
-        // Focus will happen automatically when the new input renders
+        setTempPeople([...tempPeople, { id: newId, name: '', amountPaid: 0 }])
+        // Focus the name field of the new row
         setTimeout(() => {
           const inputs = document.querySelectorAll('input[placeholder="Person name"]')
           const lastInput = inputs[inputs.length - 1] as HTMLInputElement
@@ -103,32 +109,68 @@ export function PeopleEditModal({ isOpen, people, onSave, onClose }: PeopleEditM
       footer={<Button onClick={handleSave}>Save</Button>}
     >
       <div className="space-y-3">
-        {tempPeople.map(person => (
-          <div key={person.id} className="flex gap-3 items-center">
-            <Input
-              value={person.name}
-              onChange={(value) => updatePersonName(person.id, value)}
-              onKeyDown={(e) => handleKeyDown(e, person.id)}
-              placeholder="Person name"
-              className="flex-1"
-            />
-            <button
-              onClick={() => removePerson(person.id)}
-              disabled={tempPeople.length === 1}
-              className={`text-sm px-3 transition-colors ${
-                tempPeople.length === 1
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'cursor-pointer'
-              }`}
-              style={tempPeople.length > 1 ? { background: 'none', color: '#dc2626' } : undefined}
-              onMouseEnter={(e) => tempPeople.length > 1 && (e.currentTarget.style.color = '#991b1b')}
-              onMouseLeave={(e) => tempPeople.length > 1 && (e.currentTarget.style.color = '#dc2626')}
-            >
-              Remove
-            </button>
-          </div>
-        ))}
-        <Button onClick={addPerson}>+ Add Person</Button>
+        <table className="w-full">
+          <thead>
+            <tr className="border-b-2">
+              <th className="text-left py-2 px-3 font-semibold text-sm">Name</th>
+              <th className="text-right py-2 px-3 font-semibold text-sm">Amount Paid</th>
+              <th className="py-2 px-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {tempPeople.map(person => (
+              <tr key={person.id} className="border-b">
+                <td className="py-2 px-3">
+                  <Input
+                    value={person.name}
+                    onChange={(value) => updatePersonName(person.id, value)}
+                    onKeyDown={(e) => handleKeyDown(e, person.id, 'name')}
+                    placeholder="Person name"
+                    className="w-full"
+                  />
+                </td>
+                <td className="py-2 px-3">
+                  <div className="flex items-center gap-1">
+                    <span className="font-semibold opacity-75">£</span>
+                    <Input
+                      type="number"
+                      value={person.amountPaid || ''}
+                      onChange={(value) => updatePersonAmountPaid(person.id, parseFloat(value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, person.id, 'amountPaid')}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      className="w-24"
+                    />
+                  </div>
+                </td>
+                <td className="py-2 px-3">
+                  <button
+                    onClick={() => removePerson(person.id)}
+                    disabled={tempPeople.length === 1}
+                    className={`text-sm px-3 transition-colors ${
+                      tempPeople.length === 1
+                        ? 'opacity-40 cursor-not-allowed'
+                        : 'cursor-pointer'
+                    }`}
+                    style={tempPeople.length > 1 ? { background: 'none', color: '#dc2626' } : undefined}
+                    onMouseEnter={(e) => tempPeople.length > 1 && (e.currentTarget.style.color = '#991b1b')}
+                    onMouseLeave={(e) => tempPeople.length > 1 && (e.currentTarget.style.color = '#dc2626')}
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="border-t-2">
+              <td colSpan={3} className="py-3 px-3">
+                <Button onClick={addPerson}>+ Add Person</Button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
         
         {errors.length > 0 && (
           <div className="p-3 bg-red-50 border border-red-200 rounded">

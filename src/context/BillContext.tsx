@@ -5,6 +5,7 @@ import { serializeData, deserializeData } from '../lib/serde'
 export interface Person {
   id: string
   name: string
+  amountPaid: number
 }
 
 export interface MenuItem {
@@ -34,12 +35,14 @@ interface BillContextType {
   removePerson: (id: string) => void
   removeItem: (id: string) => void
   updatePersonName: (id: string, name: string) => void
+  updatePersonAmountPaid: (id: string, amountPaid: number) => void
   updateItemName: (id: string, name: string) => void
   updateItemPrice: (id: string, price: number) => void
   updateItemQuantity: (id: string, quantity: number) => void
   updateShare: (personId: string, itemId: string, portions: number) => void
   getShare: (personId: string, itemId: string) => number
   calculateAmountsOwedWithRounding: () => Map<string, number>
+  calculateSettlements: () => Array<{ from: string; to: string; amount: number }>
 }
 
 const BillContext = createContext<BillContextType | undefined>(undefined)
@@ -149,7 +152,7 @@ export function BillProvider({ children }: { children: ReactNode }) {
 
   const addPerson = () => {
     const newId = Date.now().toString()
-    setPeople([...people, { id: newId, name: `Person ${people.length + 1}` }])
+    setPeople([...people, { id: newId, name: `Person ${people.length + 1}`, amountPaid: 0 }])
   }
 
   const addItem = () => {
@@ -169,6 +172,10 @@ export function BillProvider({ children }: { children: ReactNode }) {
 
   const updatePersonName = (id: string, name: string) => {
     setPeople(people.map(p => p.id === id ? { ...p, name } : p))
+  }
+
+  const updatePersonAmountPaid = (id: string, amountPaid: number) => {
+    setPeople(people.map(p => p.id === id ? { ...p, amountPaid } : p))
   }
 
   const updateItemName = (id: string, name: string) => {
@@ -250,6 +257,50 @@ export function BillProvider({ children }: { children: ReactNode }) {
     return amounts
   }
 
+  const calculateSettlements = (): Array<{ from: string; to: string; amount: number }> => {
+    const amounts = calculateAmountsOwedWithRounding()
+    
+    // Calculate net balance for each person (what they owe - what they paid)
+    const balances = people.map(person => ({
+      id: person.id,
+      name: person.name,
+      balance: (amounts.get(person.id) || 0) - person.amountPaid
+    }))
+    
+    // Separate into debtors (positive balance = owes money) and creditors (negative balance = owed money)
+    const debtors = balances.filter(b => b.balance > 0.005).map(b => ({ ...b })) // > 0.5p
+    const creditors = balances.filter(b => b.balance < -0.005).map(b => ({ ...b, balance: -b.balance })) // > 0.5p
+    
+    const settlements: Array<{ from: string; to: string; amount: number }> = []
+    
+    // Greedy algorithm to minimize transactions
+    let i = 0
+    let j = 0
+    
+    while (i < debtors.length && j < creditors.length) {
+      const debtor = debtors[i]
+      const creditor = creditors[j]
+      
+      const amount = Math.min(debtor.balance, creditor.balance)
+      
+      if (amount > 0.005) { // Only record if > 0.5p
+        settlements.push({
+          from: debtor.name,
+          to: creditor.name,
+          amount: Math.round(amount * 100) / 100
+        })
+      }
+      
+      debtor.balance -= amount
+      creditor.balance -= amount
+      
+      if (debtor.balance < 0.005) i++
+      if (creditor.balance < 0.005) j++
+    }
+    
+    return settlements
+  }
+
   return (
     <BillContext.Provider
       value={{
@@ -266,12 +317,14 @@ export function BillProvider({ children }: { children: ReactNode }) {
         removePerson,
         removeItem,
         updatePersonName,
+        updatePersonAmountPaid,
         updateItemName,
         updateItemPrice,
         updateItemQuantity,
         updateShare,
         getShare,
-        calculateAmountsOwedWithRounding
+        calculateAmountsOwedWithRounding,
+        calculateSettlements
       }}
     >
       {children}
