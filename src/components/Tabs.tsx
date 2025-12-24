@@ -6,19 +6,21 @@ interface TabsProps {
 
 export function Tabs({ activeTab, onTabChange, tabs }: TabsProps) {
   return (
-    <div className="flex gap-2 mb-6 border-b border-gray-300">
-      {tabs.map((tab, index) => (
-        <button
-          key={tab.id}
-          onClick={() => onTabChange(tab.id)}
-          className={`px-6 py-3 font-semibold transition-all cursor-pointer rounded-t text-gray-600 hover:text-gray-800 ${
-            index === tabs.length - 1 ? 'ml-auto' : ''
-          }`}
-          style={activeTab === tab.id ? { backgroundColor: 'rgba(209, 213, 219, 0.3)' } : undefined}
-        >
-          {tab.label}
-        </button>
-      ))}
+    <div className="overflow-x-auto mb-6 border-b border-gray-300">
+      <div className="flex gap-2 min-w-max">
+        {tabs.map((tab, index) => (
+          <button
+            key={tab.id}
+            onClick={() => onTabChange(tab.id)}
+            className={`px-6 py-3 font-semibold transition-all cursor-pointer rounded-t text-gray-600 hover:text-gray-800 whitespace-nowrap ${
+              index === tabs.length - 1 ? 'ml-auto' : ''
+            }`}
+            style={activeTab === tab.id ? { backgroundColor: 'rgba(209, 213, 219, 0.3)' } : undefined}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
