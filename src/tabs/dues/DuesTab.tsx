@@ -25,7 +25,12 @@ export function DuesTab() {
         )}
       </div>
 
-      {people.length > 0 && items.length > 0 && <SettlementsTable />}
+      {people.length > 0 && items.length > 0 && (
+        <div className="p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Settlement Transactions</h2>
+          <SettlementsTable />
+        </div>
+      )}
     </div>
   )
 }

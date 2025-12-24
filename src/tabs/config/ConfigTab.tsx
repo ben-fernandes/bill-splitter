@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useBill } from '../../context/BillContext'
-import { Button } from '../../components/Button'
+import { PeopleTable } from './PeopleTable'
+import { ItemsTable } from './ItemsTable'
 import { PeopleEditModal } from './modals/PeopleEditModal'
 import { ItemsEditModal } from './modals/ItemsEditModal'
 import { ConfigResetConfirmationModal } from './modals/ConfigResetConfirmationModal'
@@ -75,39 +76,7 @@ export function ConfigTab() {
         </div>
 
         {/* View Mode */}
-        {people.length > 0 ? (
-          <div>
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2">
-                  <th className="text-left py-2 px-3 font-semibold">Name</th>
-                  <th className="text-right py-2 px-3 font-semibold">Amount Paid</th>
-                </tr>
-              </thead>
-              <tbody>
-                {people.map(person => (
-                  <tr key={person.id} className="border-b">
-                    <td className="py-2 px-3">{person.name}</td>
-                    <td className="py-2 px-3 text-right opacity-75 numeric">£{person.amountPaid.toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="border-t-2">
-                  <td className="py-2 px-3 text-right font-semibold">Total:</td>
-                  <td className="py-2 px-3 text-right font-semibold numeric">
-                    £{people.reduce((sum, person) => sum + person.amountPaid, 0).toFixed(2)}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="opacity-60 mb-4">No people added yet</p>
-            <Button onClick={() => setEditingPeople(true)}>Add People</Button>
-          </div>
-        )}
+        <PeopleTable onEdit={() => setEditingPeople(true)} />
       </div>
 
       <PeopleEditModal
@@ -132,61 +101,7 @@ export function ConfigTab() {
         </div>
 
         {/* View Mode */}
-        {items.length > 0 ? (
-          <div>
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2">
-                  <th className="text-left py-2 px-3 font-semibold">Item</th>
-                  <th className="text-right py-2 px-3 font-semibold">Price</th>
-                  <th className="text-right py-2 px-3 font-semibold">Qty</th>
-                  <th className="text-right py-2 px-3 font-semibold">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map(item => (
-                  <tr key={item.id} className="border-b">
-                    <td className="py-2 px-3">{item.name || 'Unnamed Item'}</td>
-                    <td className="py-2 px-3 text-right opacity-75 numeric">£{item.price.toFixed(2)}</td>
-                    <td className="py-2 px-3 text-right opacity-75 numeric">{item.quantity}</td>
-                    <td className="py-2 px-3 text-right font-semibold numeric">£{(item.price * item.quantity).toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="border-t-2">
-                  <td colSpan={3} className="py-2 px-3 text-right font-semibold">Subtotal:</td>
-                  <td className="py-2 px-3 text-right font-semibold numeric">
-                    £{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
-                  </td>
-                </tr>
-                {serviceCharge > 0 && (
-                  <tr>
-                    <td colSpan={3} className="py-2 px-3 text-right opacity-75">Service Charge ({serviceCharge}%):</td>
-                    <td className="py-2 px-3 text-right opacity-75 numeric">
-                      £{((items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * serviceCharge) / 100).toFixed(2)}
-                    </td>
-                  </tr>
-                )}
-                <tr className="border-t">
-                  <td colSpan={3} className="py-2 px-3 text-right font-bold">Grand Total:</td>
-                  <td className="py-2 px-3 text-right font-bold text-lg numeric">
-                    £{(() => {
-                      const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-                      const serviceChargeAmount = (subtotal * serviceCharge) / 100
-                      return (subtotal + serviceChargeAmount).toFixed(2)
-                    })()}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="opacity-60 mb-4">No items added yet</p>
-            <Button onClick={() => setEditingItems(true)}>Add Items</Button>
-          </div>
-        )}
+        <ItemsTable onEdit={() => setEditingItems(true)} />
       </div>
       </div>
 

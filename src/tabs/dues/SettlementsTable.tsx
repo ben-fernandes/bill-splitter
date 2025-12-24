@@ -11,8 +11,7 @@ export function SettlementsTable() {
   }
 
   return (
-    <div className="p-6 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Settlement Transactions</h2>
+    <>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -38,6 +37,6 @@ export function SettlementsTable() {
       <p className="text-sm opacity-70 mt-2">
         {settlements.length} transaction{settlements.length !== 1 ? 's' : ''} needed to settle all debts
       </p>
-    </div>
+    </>
   )
 }
