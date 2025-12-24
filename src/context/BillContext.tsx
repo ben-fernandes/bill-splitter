@@ -30,15 +30,6 @@ interface BillContextType {
   setItems: (items: MenuItem[]) => void
   setShares: (shares: Share[]) => void
   setServiceCharge: (charge: number) => void
-  addPerson: () => void
-  addItem: () => void
-  removePerson: (id: string) => void
-  removeItem: (id: string) => void
-  updatePersonName: (id: string, name: string) => void
-  updatePersonAmountPaid: (id: string, amountPaid: number) => void
-  updateItemName: (id: string, name: string) => void
-  updateItemPrice: (id: string, price: number) => void
-  updateItemQuantity: (id: string, quantity: number) => void
   updateShare: (personId: string, itemId: string, portions: number) => void
   getShare: (personId: string, itemId: string) => number
   calculateAmountsOwedWithRounding: () => Map<string, number>
@@ -149,46 +140,6 @@ export function BillProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     updateURL(people, items, shares, serviceCharge)
   }, [people, items, shares, serviceCharge])
-
-  const addPerson = () => {
-    const newId = Date.now().toString()
-    setPeople([...people, { id: newId, name: `Person ${people.length + 1}`, amountPaid: 0 }])
-  }
-
-  const addItem = () => {
-    const newId = Date.now().toString()
-    setItems([...items, { id: newId, name: '', price: 0, quantity: 1 }])
-  }
-
-  const removePerson = (id: string) => {
-    setPeople(people.filter(p => p.id !== id))
-    setShares(shares.filter(s => s.personId !== id))
-  }
-
-  const removeItem = (id: string) => {
-    setItems(items.filter(i => i.id !== id))
-    setShares(shares.filter(s => s.itemId !== id))
-  }
-
-  const updatePersonName = (id: string, name: string) => {
-    setPeople(people.map(p => p.id === id ? { ...p, name } : p))
-  }
-
-  const updatePersonAmountPaid = (id: string, amountPaid: number) => {
-    setPeople(people.map(p => p.id === id ? { ...p, amountPaid } : p))
-  }
-
-  const updateItemName = (id: string, name: string) => {
-    setItems(items.map(i => i.id === id ? { ...i, name } : i))
-  }
-
-  const updateItemPrice = (id: string, price: number) => {
-    setItems(items.map(i => i.id === id ? { ...i, price } : i))
-  }
-
-  const updateItemQuantity = (id: string, quantity: number) => {
-    setItems(items.map(i => i.id === id ? { ...i, quantity } : i))
-  }
 
   const updateShare = (personId: string, itemId: string, portions: number) => {
     const existingShareIndex = shares.findIndex(
@@ -312,15 +263,6 @@ export function BillProvider({ children }: { children: ReactNode }) {
         setItems,
         setShares,
         setServiceCharge,
-        addPerson,
-        addItem,
-        removePerson,
-        removeItem,
-        updatePersonName,
-        updatePersonAmountPaid,
-        updateItemName,
-        updateItemPrice,
-        updateItemQuantity,
         updateShare,
         getShare,
         calculateAmountsOwedWithRounding,
