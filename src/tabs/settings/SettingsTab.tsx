@@ -71,6 +71,24 @@ export function SettingsTab() {
           Share your bill by copying the URL. Anyone with the link can view and edit the bill.
         </p>
       </div>
+
+      {/* GitHub - Level 3 */}
+      <div className="flex flex-col gap-3">
+        <h3 className="text-lg font-semibold">GitHub</h3>
+        <div className="flex gap-3">
+          <a 
+            href="https://github.com/ben-fernandes/bill-splitter" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-lg transition-shadow"
+          >
+            View on GitHub
+          </a>
+        </div>
+        <p className="text-sm opacity-70">
+          Want to contribute? Submit a pull request on GitHub.
+        </p>
+      </div>
     </div>
   )
 }
