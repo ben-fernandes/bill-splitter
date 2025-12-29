@@ -19,13 +19,13 @@ export function SettingsTab() {
   }
 
   return (
-    <div className="p-6 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6">Settings</h2>
+    <div className="p-6 rounded-lg shadow-lg flex flex-col gap-6">
+      <h2 className="text-2xl font-bold">Settings</h2>
       
       {/* Theme - Level 3 */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-3">Theme</h3>
-        <div className="inline-flex rounded-lg border overflow-hidden">
+      <div className="flex flex-col gap-3">
+        <h3 className="text-lg font-semibold">Theme</h3>
+        <div className="flex rounded-lg border overflow-hidden w-fit">
           <button
             onClick={() => setMode('light')}
             className={`px-4 py-2 font-semibold transition-colors ${
@@ -60,14 +60,14 @@ export function SettingsTab() {
       </div>
 
       {/* Share Data - Level 3 */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">Share</h3>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-lg font-semibold">Share</h3>
         <div className="flex gap-3">
           <Button onClick={handleCopyShareableURL}>
             {copied ? '✓ Copied!' : 'Copy Shareable URL'}
           </Button>
         </div>
-        <p className="text-sm opacity-70 mt-2">
+        <p className="text-sm opacity-70">
           Share your bill by copying the URL. Anyone with the link can view and edit the bill.
         </p>
       </div>
